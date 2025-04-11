@@ -1,0 +1,86 @@
+#Learning Management System (LMS)
+
+## Features
+-Website 
+    -Explore courses according to category
+    -Search courses with keyword
+    -Free and paid courses
+    -About Us page
+    -FAQ page
+    -Support
+    -Join as student and enroll in courses
+    -Join as Teacher and upload content
+
+-Teacher panel
+    -Login/Register/OTP Verify via email
+    -ForgetPassword/ChangePassword/
+    -profile/social Accounts
+    -Send message to enrolled student(Individually or All)
+    -category CRUD
+    -UPLOAD content according to category
+        - If video status true then anyone can see the video without enroll
+        - if video status is false then only enrolled student can view 
+
+    -UPLOAD study material according to course
+    -Can see the total enrolled students and their progress
+    -Count Total views of content
+
+-Student panel
+    -Login/Register/OTP Verify via email
+    -ForgetPassword/ChangePassword/profile
+    -Enrolled courses
+        -Each Enrolled Course show the videos in sequence
+        -When previous video : then student access the next video
+    -View the profile of content Creators (Individually or All)
+
+
+-Admin panel
+    -Manage Everything
+    -Search anything
+    -Add/update/Delete any content
+    -Enable/Disable any course, student or Teacher    
+
+##  TECHNOLOGIES
+
+# BACKEND
+-Python
+-Django
+-REST API (Django REST Framework)
+-SQLite
+
+
+# FRONTEND
+-Bootstrap 5
+-ReactJs
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
