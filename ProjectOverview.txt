@@ -46,7 +46,8 @@
 -Python
 -Django
 -REST API (Django REST Framework)
--SQLite
+-MYSQL
+
 
 
 # FRONTEND
