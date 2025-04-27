@@ -11,7 +11,7 @@ function Header() {
       <div className="collapse navbar-collapse" id="navbarNavDropdown">
         <ul className="navbar-nav ms-auto">
           <li className="nav-item">
-            <Link className="nav-link active" aria-current="page" href="#">Home</Link>
+            <Link to="/" className="nav-link active" aria-current="page" >Home</Link>
           </li>
           <li className="nav-item">
             <a className="nav-link" href="#" to="/">Courses</a>
