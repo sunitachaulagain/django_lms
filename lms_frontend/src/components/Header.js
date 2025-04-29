@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 function Header() {
   return (
-    <nav className="navbar navbar-expand-lg bg-dark">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
         <Link className="navbar-brand" to="/">LearnBook</Link>
         <button
@@ -20,60 +20,54 @@ function Header() {
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <Link to="/" className="nav-link active" aria-current="page">Home</Link>
+              <Link to="/" className="nav-link" aria-current="page">Home</Link>
             </li>
 
             <li className="nav-item">
               <Link to="/courses" className="nav-link">Courses</Link>
             </li>
 
-            <li className="nav-item">
-              <Link to="/teachers" className="nav-link">Teachers</Link>
-            </li>
-
+            {/* Teachers Dropdown */}
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"
                 href="#"
+                id="teacherDropdown"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                User
+                Teachers
               </a>
-              <ul className="dropdown-menu">
-                <li>
-                  <Link className="dropdown-item" to="/user-register">Register</Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/user-login">Login</Link>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/user-dashboard">Dashboard</Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/">Logout</Link>
-                </li>
+              <ul className="dropdown-menu" aria-labelledby="teacherDropdown">
+                <li><Link to="/teacher-login" className="dropdown-item">Login</Link></li>
+                <li><Link to="/teacher-register" className="dropdown-item">Register</Link></li>
+                <li><Link to="/teacher-dashboard" className="dropdown-item">Dashboard</Link></li>
+                <li><Link to="/teacher-logout" className="dropdown-item">Logout</Link></li>
               </ul>
             </li>
 
-            {/* <li className="nav-item">
-              <Link className="nav-link" to="/about">About Us</Link>
-            </li> */}
-
-            {/* <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Dropdown link
+            {/* Student Dropdown */}
+            <li className="nav-item dropdown">
+              <a
+                className="nav-link dropdown-toggle"
+                href="#"
+                id="userDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Student
               </a>
-              <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">Action</a></li>
-                <li><a className="dropdown-item" href="#">Another action</a></li>
-                <li><a className="dropdown-item" href="#">Something else here</a></li>
+              <ul className="dropdown-menu" aria-labelledby="userDropdown">
+                <li><Link className="dropdown-item" to="/user-register">Register</Link></li>
+                <li><Link className="dropdown-item" to="/user-login">Login</Link></li>
+                <li><hr className="dropdown-divider" /></li>
+                <li><Link className="dropdown-item" to="/user-dashboard">Dashboard</Link></li>
+                <li><Link className="dropdown-item" to="/user-logout">Logout</Link></li>
               </ul>
-            </li> */}
+            </li>
+
           </ul>
         </div>
       </div>

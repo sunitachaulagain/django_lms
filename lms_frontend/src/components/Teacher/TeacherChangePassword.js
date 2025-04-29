@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import Sidebar from './SideBar';
+import Sidebar from './TeacherSidebar'; // Correct Sidebar import for Teacher
 
-function ProfileSetting() {
+function TeacherChangePassword() {
   return (
     <div className="container mt-4">
       <div className="row">
@@ -13,61 +13,60 @@ function ProfileSetting() {
         {/* Main Content Section */}
         <section className="col-md-9">
           <div className="card">
-            <h5 className="card-header">Profile Settings</h5>
+            <h5 className="card-header">Change Password</h5>
             <div className="card-body">
               <form>
 
-                {/* Full Name */}
+                {/* Current Password */}
                 <div className="mb-3 row">
-                  <label htmlFor="fullName" className="col-sm-2 col-form-label">
-                    Full Name
+                  <label htmlFor="currentPassword" className="col-sm-3 col-form-label">
+                    Current Password
                   </label>
-                  <div className="col-sm-10">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="fullName"
-                      placeholder="Enter your full name"
-                    />
-                  </div>
-                </div>
-
-                {/* Email */}
-                <div className="mb-3 row">
-                  <label htmlFor="staticEmail" className="col-sm-2 col-form-label">
-                    Email
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      type="text"
-                      readOnly
-                      className="form-control-plaintext"
-                      id="staticEmail"
-                      value="email@example.com"
-                    />
-                  </div>
-                </div>
-
-                {/* Password */}
-                <div className="mb-3 row">
-                  <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
-                    Password
-                  </label>
-                  <div className="col-sm-10">
+                  <div className="col-sm-9">
                     <input
                       type="password"
                       className="form-control"
-                      id="inputPassword"
+                      id="currentPassword"
+                      placeholder="Enter current password"
+                    />
+                  </div>
+                </div>
+
+                {/* New Password */}
+                <div className="mb-3 row">
+                  <label htmlFor="newPassword" className="col-sm-3 col-form-label">
+                    New Password
+                  </label>
+                  <div className="col-sm-9">
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="newPassword"
                       placeholder="Enter new password"
+                    />
+                  </div>
+                </div>
+
+                {/* Confirm New Password */}
+                <div className="mb-3 row">
+                  <label htmlFor="confirmPassword" className="col-sm-3 col-form-label">
+                    Confirm Password
+                  </label>
+                  <div className="col-sm-9">
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="confirmPassword"
+                      placeholder="Confirm new password"
                     />
                   </div>
                 </div>
 
                 {/* Submit Button */}
                 <div className="mb-3 row">
-                  <div className="col-sm-10 offset-sm-2">
+                  <div className="col-sm-9 offset-sm-3">
                     <button type="submit" className="btn btn-primary">
-                      Update Profile
+                      Change Password
                     </button>
                   </div>
                 </div>
@@ -81,4 +80,4 @@ function ProfileSetting() {
   );
 }
 
-export default ProfileSetting;
+export default TeacherChangePassword;
