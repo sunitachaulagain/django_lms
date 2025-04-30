@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import AllCourses from "./AllCourses";
 
 function Home() {
   return (
@@ -6,7 +7,7 @@ function Home() {
       {/* Latest courses */}
       <h3 className="pb-1 mb-4">
         Latest courses
-        <Link to="#" className="float-end">
+        <Link to="/all-courses" className="float-end">
           See All
         </Link>
       </h3>
@@ -60,58 +61,110 @@ function Home() {
       {/* Popular courses */}
       <h3 className="pb-1 mb-4 mt-5">
         Popular courses
-        <Link to="#" className="float-end">
+        <Link to="/popular-courses" className="float-end">
           See All
         </Link>
       </h3>
       <div className="row">
         <div className="card m-2" style={{ width: "18rem" }}>
           <Link to="#">
-            <img src="logo512.png" className="card-img-top" alt="Popular Course 1" />
+            <img
+              src="logo512.png"
+              className="card-img-top"
+              alt="Popular Course 1"
+            />
           </Link>
           <div className="card-body">
             <h5 className="card-title">
               <Link to="#">Popular Course 1</Link>
             </h5>
           </div>
+          <div className="card-footer">
+            <div className="title">
+              <span>Rating: 4.5/5</span>
+              <span>
+                <div className="float-end">Views: 7877</div>
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="card m-2" style={{ width: "18rem" }}>
           <Link to="#">
-            <img src="logo512.png" className="card-img-top" alt="Popular Course 2" />
+            <img
+              src="logo512.png"
+              className="card-img-top"
+              alt="Popular Course 2"
+            />
           </Link>
           <div className="card-body">
             <h5 className="card-title">
               <Link to="#">Popular Course 2</Link>
             </h5>
           </div>
+          <div className="card-footer">
+            <div className="title">
+              <span>Rating: 4.5/5</span>
+              <span>
+                <div className="float-end">Views: 7877</div>
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="card m-2" style={{ width: "18rem" }}>
           <Link to="#">
-            <img src="logo512.png" className="card-img-top" alt="Popular Course 3" />
+            <img
+              src="logo512.png"
+              className="card-img-top"
+              alt="Popular Course 3"
+            />
           </Link>
           <div className="card-body">
             <h5 className="card-title">
               <Link to="#">Popular Course 3</Link>
             </h5>
           </div>
+          <div className="card-footer">
+            <div className="title">
+              <span>Rating: 4.5/5</span>
+              <span>
+                <div className="float-end">Views: 7877</div>
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="card m-2" style={{ width: "18rem" }}>
           <Link to="#">
-            <img src="logo512.png" className="card-img-top" alt="Popular Course 4" />
+            <img
+              src="logo512.png"
+              className="card-img-top"
+              alt="Popular Course 4"
+            />
           </Link>
           <div className="card-body">
             <h5 className="card-title">
               <Link to="#">Popular Course 4</Link>
             </h5>
           </div>
+          <div className="card-footer">
+            <div className="title">
+              <span>Rating: 4.5/5</span>
+              <span>
+                <div className="float-end">Views: 7877</div>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Popular Teachers */}
-      <h3 className="pb-1 mb-4 mt-5">Popular Teachers</h3>
+      <h3 className="pb-1 mb-4 mt-5">Popular Teachers
+      <Link to="/popular-teachers" className="float-end">
+          See All
+        </Link>
+      </h3>
       <div className="row">
         <div className="card m-2" style={{ width: "18rem" }}>
           <Link to="#">
@@ -119,7 +172,7 @@ function Home() {
           </Link>
           <div className="card-body">
             <h5 className="card-title">
-              <Link to="#">Teacher 1</Link>
+              <Link to="/teacher-detail/1">Teacher Name</Link>
             </h5>
           </div>
         </div>
@@ -130,7 +183,7 @@ function Home() {
           </Link>
           <div className="card-body">
             <h5 className="card-title">
-              <Link to="#">Teacher 2</Link>
+            <Link to="/teacher-detail/1">Teacher Name</Link>
             </h5>
           </div>
         </div>
@@ -141,7 +194,7 @@ function Home() {
           </Link>
           <div className="card-body">
             <h5 className="card-title">
-              <Link to="#">Teacher 3</Link>
+            <Link to="/teacher-detail/1">Teacher Name</Link>
             </h5>
           </div>
         </div>
@@ -152,7 +205,7 @@ function Home() {
           </Link>
           <div className="card-body">
             <h5 className="card-title">
-              <Link to="#">Teacher 4</Link>
+            <Link to="/teacher-detail/1">Teacher Name</Link>
             </h5>
           </div>
         </div>

@@ -29,6 +29,9 @@ import Home from "./Home";
 import About from "./About";
 import Footer from "./Footer";
 import CourseDetail from "./CourseDetail";
+import AllCourses  from "./AllCourses";
+import PopularCourses from "./PopularCourses";
+import PopularTeachers from "./PopularTeachers";
 
 function Main() {
   return (
@@ -39,6 +42,9 @@ function Main() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/detail/:course_id" element={<CourseDetail />} />
+        <Route path="/all-courses" element={<AllCourses/>}/>
+        <Route path="/popular-courses" element={<PopularCourses/>}/>
+        <Route path="/popular-teachers" element={<PopularTeachers/>}/>
 
 
         {/* Student Routes */}
