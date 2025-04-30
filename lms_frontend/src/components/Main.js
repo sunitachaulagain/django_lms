@@ -32,6 +32,7 @@ import CourseDetail from "./CourseDetail";
 import AllCourses  from "./AllCourses";
 import PopularCourses from "./PopularCourses";
 import PopularTeachers from "./PopularTeachers";
+import CategoryCourses from "./CategoryCourses";
 
 function Main() {
   return (
@@ -45,6 +46,7 @@ function Main() {
         <Route path="/all-courses" element={<AllCourses/>}/>
         <Route path="/popular-courses" element={<PopularCourses/>}/>
         <Route path="/popular-teachers" element={<PopularTeachers/>}/>
+        <Route path="/category/:categorySlug" element={<CategoryCourses/>}/>
 
 
         {/* Student Routes */}

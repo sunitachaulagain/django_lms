@@ -19,11 +19,13 @@ function TeacherDetail() {
             Tenetur, obcaecati.
           </p>
           <p className="fw-bold">
-            Skills: <Link to="/teacher-detail/1">PHP</Link>,  
-            <Link to="/teacher-detail/1">Python</Link>,
-            <Link to="/teacher-detail/1">JavaScript</Link>
+            Skills:{" "}
+            <Link to="/category/php">PHP</Link>,{" "}
+            <Link to="/category/python">Python</Link>,{" "}
+            <Link to="/category/javascript">JavaScript</Link>
           </p>
-          <p className="fw-bold">Recent Courses: <Link to="/teacher-detail/1">React JS</Link>,
+          <p className="fw-bold">
+            Recent Courses: <Link to="/teacher-detail/1">React JS</Link>
           </p>
           <p className="fw-bold">Rating: 4.5/5</p>
         </div>
@@ -31,21 +33,30 @@ function TeacherDetail() {
 
       {/* Course Videos */}
       <div className="card mt-4">
-        <h5 className="card-header">
-            Course List
-        </h5>
+        <h5 className="card-header">Course List</h5>
         <ul className="list-group list-group-flush">
-          <Link to="/detail/1" className="list-group-item list-group-item-action"> PHP Course 1</Link>
-          <Link to="/detail/1" className="list-group-item list-group-item-action"> PHP Course 2</Link>
-          <Link to="/detail/1" className="list-group-item list-group-item-action"> Python Course 1</Link>
-          <Link to="/detail/1" className="list-group-item list-group-item-action"> Python Course 2</Link>
-          <Link to="/detail/1" className="list-group-item list-group-item-action"> JavaScript Course 1</Link>
-          <Link to="/detail/1" className="list-group-item list-group-item-action"> JavaScript Course 2</Link>
-
-
+          <li className="list-group-item">
+            <Link to="/detail/101" className="text-decoration-none">PHP Course 1</Link>
+          </li>
+          <li className="list-group-item">
+            <Link to="/detail/102" className="text-decoration-none">PHP Course 2</Link>
+          </li>
+          <li className="list-group-item">
+            <Link to="/detail/103" className="text-decoration-none">Python Course 1</Link>
+          </li>
+          <li className="list-group-item">
+            <Link to="/detail/104" className="text-decoration-none">Python Course 2</Link>
+          </li>
+          <li className="list-group-item">
+            <Link to="/detail/105" className="text-decoration-none">JavaScript Course 1</Link>
+          </li>
+          <li className="list-group-item">
+            <Link to="/detail/106" className="text-decoration-none">JavaScript Course 2</Link>
+          </li>
         </ul>
       </div>
     </div>
   );
 }
+
 export default TeacherDetail;

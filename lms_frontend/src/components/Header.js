@@ -24,7 +24,7 @@ function Header() {
             </li>
 
             <li className="nav-item">
-              <Link to="/courses" className="nav-link">Courses</Link>
+              <Link to="/all-courses" className="nav-link">Courses</Link>
             </li>
 
             {/* Teachers Dropdown */}
