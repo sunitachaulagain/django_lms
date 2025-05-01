@@ -1,8 +1,7 @@
-
 from django.urls import path
-from . import views
+from .views import TeacherList, TeacherDetail  # Import TeacherList and TeacherDetail from views
 
 urlpatterns = [
-    path('teacher/', views.TeacherList.as_view(), name='teacher-list'),
-    path('teacher/<int:pk>/', views.TeacherDetail.as_view(), name='teacher-detail'),
+    path('teacher/', TeacherList.as_view(), name='teacher-list'),  # Corrected this line
+    path('teacher/<int:pk>/', TeacherDetail.as_view(), name='teacher-detail'),  # Added 'api/' to keep consistency
 ]
