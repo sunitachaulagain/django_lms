@@ -1,7 +1,11 @@
 import {Link} from 'react-router-dom';
 import Sidebar from './SideBar';
+import { useEffect } from 'react';
 
 function MyCourses(){
+  useEffect(()=>{
+    document.title='LMS| Student Register Page';
+  });
   return(
     <div class="container mt-4">
       <div class="row">

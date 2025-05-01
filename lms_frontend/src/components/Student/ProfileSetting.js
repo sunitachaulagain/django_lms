@@ -12,7 +12,8 @@ function ProfileSetting() {
 
         {/* Main Content Section */}
         <section className="col-md-9">
-          <div className="card">
+       
+            <div className="card">
             <h5 className="card-header">Profile Settings</h5>
             <div className="card-body">
               <form>

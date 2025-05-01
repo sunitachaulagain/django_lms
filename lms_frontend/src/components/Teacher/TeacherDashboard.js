@@ -1,7 +1,11 @@
 import { Link } from 'react-router-dom';
 import Sidebar from './TeacherSidebar'; // Teacher Sidebar
+import { useEffect } from 'react';
 
 function TeacherDashboard() {
+  useEffect(()=>{
+    document.title='Teacher Dashboard';
+  });
   return (
     <div className="container mt-4">
       <div className="row">

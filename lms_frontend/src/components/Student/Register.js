@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
-
+import { useEffect } from "react";   
 function Register() {
+  useEffect(()=>{
+    document.title='LMS| Student Register Page';
+  });
   return (
     <div className="container mt-4">
       <div className="row">

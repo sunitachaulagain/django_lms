@@ -1,6 +1,19 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from 'axios';
 
+
+const baseUrl = 'http://localhost:8000/api/';
 function PopularTeacher() {
+  const baseUrl = 'http://localhost:8000/api';
+axios.get(baseUrl + '/teacher/')
+  .then((response) => {
+    console.log(response.data);
+  })
+  .catch((error) => {
+    console.log('Error:', error);
+  });
+
   return (
     <div className="container mt-3">
       {/* Popular Teachers */}

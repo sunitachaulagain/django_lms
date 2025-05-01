@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 function PopularCourses() {
+  useEffect(()=>{
+    document.title='Popular Courses';
+  });
   return (
     <div className="container mt-3">
       {/* Popular courses */}

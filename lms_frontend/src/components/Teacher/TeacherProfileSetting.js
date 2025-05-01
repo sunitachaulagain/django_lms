@@ -1,7 +1,11 @@
 import { Link } from 'react-router-dom';
 import TeacherSidebar from './TeacherSidebar';
+import { useEffect } from 'react';
 
 function TeacherProfileSetting() {
+   useEffect(()=>{
+      document.title='Teacher Profile';
+    });
   return (
     <div className="container mt-4">
       <div className="row">

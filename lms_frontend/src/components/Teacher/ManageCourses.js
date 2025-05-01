@@ -1,7 +1,11 @@
 import { Link } from 'react-router-dom';
-import Sidebar from './TeacherSidebar'; // Correct Sidebar import for Teacher
+import Sidebar from './TeacherSidebar';
+import { useEffect } from 'react';
 
 function ManageCourses() {
+  useEffect(()=>{
+    document.title='Manage Courses';
+  });
   return (
     <div className="container mt-4">
       <div className="row">
