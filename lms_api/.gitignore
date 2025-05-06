@@ -1,9 +1,2 @@
 # Ignore the media folder (where files like uploaded videos are stored)
 media/
-
-# Ignore the virtual environment
-env/
-
-# Ignore Python bytecode files
-__pycache__/
-*.pyc
