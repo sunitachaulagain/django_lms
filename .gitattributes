@@ -1,1 +1,2 @@
 lms_api/media/chapter_videos/*.mp4 filter=lfs diff=lfs merge=lfs -text
+lms_api/media/chapter_videos/new_7LQB545.mp4 filter=lfs diff=lfs merge=lfs -text
