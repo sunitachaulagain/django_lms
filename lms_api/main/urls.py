@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from .views import TeacherList, TeacherDetail  # Import TeacherList and TeacherDetail from views
 
+
 urlpatterns = [
     
     # Teacher URLs
@@ -16,6 +17,10 @@ urlpatterns = [
     path('course/', views.CourseList.as_view()), 
     
     #Teacher courses 
-        path('teacher-course/<int:teacher_id>', views.TeacherCourseList.as_view()), 
+    path('teacher-courses/<int:teacher_id>', views.TeacherCourseList.as_view()), 
+    
+    
+    # Chapter URLs
+    path('chapter/', views.ChapterList.as_view()), 
 
 ]

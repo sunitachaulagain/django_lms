@@ -38,6 +38,18 @@ class Course(models.Model):
 
     class Meta:
         verbose_name_plural = "3. Courses"
+        
+        
+# Chapter Model
+class Chapter(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    title = models.CharField(max_length=150)
+    description = models.TextField()
+    video = models.FileField(upload_to='chapter_videos/', null=True)
+    remarks = models.TextField(null=True)  # You could also use a ManyToManyField for technologies if they are a separate model
+
+    class Meta:
+        verbose_name_plural = "4. Chapters"        
 
 # Student Model
 class Student(models.Model):

@@ -26,4 +26,17 @@ class CourseSerializer(serializers.ModelSerializer):
             'description',
             'featured_img',
             'techs',
+
         ]
+        
+class ChapterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Chapter
+        fields = [
+            'id',
+            'course',           # accepts course ID during POST
+            'title',
+            'description',
+            'video',
+            'remarks',
+        ]        
