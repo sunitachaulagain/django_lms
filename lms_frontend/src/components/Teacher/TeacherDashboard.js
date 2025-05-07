@@ -22,7 +22,7 @@ function TeacherDashboard() {
             </div>
             <div className="card-body">
               <p>View and manage your courses here. You can add new courses, update course content, and track student progress.</p>
-              <Link to="/manage-courses" className="btn btn-primary">
+              <Link to="/teacher-courses" className="btn btn-primary">
                 Manage Courses
               </Link>
             </div>

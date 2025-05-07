@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import TeacherSidebar from "./TeacherSidebar";
+import { useParams } from 'react-router-dom';
 
 const baseURL = "http://127.0.0.1:8000/api"; // corrected baseURL
 
 function AddChapter() {
+  const { course_id } = useParams();
+
   const [chapters, setChapters] = useState([]);
   const [newChapter, setNewChapter] = useState({
     title: "",
@@ -24,11 +27,15 @@ function AddChapter() {
   };
 
   const handleAddChapter = async (e) => {
+
     e.preventDefault();
 
     if (!newChapter.title || !newChapter.description) return;
 
     const formData = new FormData();
+
+    formData.append("course", course_id); // Use the course ID from the URL
+
     formData.append("title", newChapter.title);
     formData.append("description", newChapter.description);
     formData.append("video", newChapter.video);

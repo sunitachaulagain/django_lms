@@ -18,10 +18,13 @@ import TeacherDashboard from "./Teacher/TeacherDashboard";
 import TeacherSidebar from "./Teacher/TeacherSidebar"; // <-- Teacher Sidebar
 import TeacherProfileSetting from "./Teacher/TeacherProfileSetting";
 import TeacherChangePassword from "./Teacher/TeacherChangePassword";
-import ManageCourses from "./Teacher/ManageCourses"; // <-- Added
+import TeacherCourses from "./Teacher/TeacherCourses"; // <-- Added
 import ViewAssignments from "./Teacher/ViewAssignments"; // <-- Added
 import ViewStudents from "./Teacher/ViewStudents"; // <-- Added
 import TeacherDetail from "./TeacherDetail";
+import TeacherLogout from "./Teacher/TeacherLogout";
+import AddCourses from "./Teacher/AddCourses";
+import AddChapter from "./Teacher/AddChapter";
 
 // Other Components
 import Header from "./Header";
@@ -33,6 +36,7 @@ import AllCourses  from "./AllCourses";
 import PopularCourses from "./PopularCourses";
 import PopularTeachers from "./PopularTeachers";
 import CategoryCourses from "./CategoryCourses";
+
 
 function Main() {
   return (
@@ -68,11 +72,14 @@ function Main() {
         <Route path="/teacher-change-password" element={<TeacherChangePassword />} />
         <Route path="/teacher-sidebar" element={<TeacherSidebar />} /> {/* Teacher Sidebar */}
         <Route path="/teacher-detail/:teacher_id" element={<TeacherDetail />} />
+        <Route path="/teacher-logout" element={<TeacherLogout/>}/>
 
         {/* Teacher Course Management */}
-        <Route path="/manage-courses" element={<ManageCourses />} />
+        <Route path="/teacher-courses" element={<TeacherCourses />} />
         <Route path="/view-assignments" element={<ViewAssignments />} />
         <Route path="/view-students" element={<ViewStudents />} />
+        <Route path="/teacher-add-courses" element={<AddCourses/>}/>
+        <Route path="/add-chapter" element={<AddChapter/>} />
       </Routes>
       <Footer />
     </div>

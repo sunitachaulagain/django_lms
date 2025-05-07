@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // ✅ Updated
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -12,10 +12,11 @@ function Register() {
     qualification: "",
     mobile_no: "",
     skills: "",
-    status: "", // default status empty
+    status: "",
   });
 
-  // Change Element Value
+  const navigate = useNavigate(); // ✅ Added
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setTeacherData({
@@ -23,12 +24,9 @@ function Register() {
       [name]: value,
     });
   };
-  console.log(TeacherData);
-  // End
 
-  // Submit Form
   const submitForm = (e) => {
-    e.preventDefault(); // Prevent page reload
+    e.preventDefault();
 
     const teacherFormData = new FormData();
     teacherFormData.append("full_name", TeacherData.full_name);
@@ -50,6 +48,9 @@ function Register() {
           skills: "",
           status: "success",
         });
+
+        // ✅ Redirect after successful registration
+        navigate('/teacher-login');
       })
       .catch((error) => {
         if (error.response) {
@@ -63,7 +64,11 @@ function Register() {
         }
       });
   };
-  // End
+
+  const teacherLoginStatus = localStorage.getItem('teacherLoginStatus');
+  if (teacherLoginStatus === 'true') {
+    window.location.href = '/teacher-dashboard';
+  }
 
   return (
     <div className="container mt-4">
@@ -81,9 +86,7 @@ function Register() {
             <div className="card-body">
               <form>
                 <div className="mb-3">
-                  <label htmlFor="fullName" className="form-label">
-                    Full Name
-                  </label>
+                  <label htmlFor="fullName" className="form-label">Full Name</label>
                   <input
                     value={TeacherData.full_name}
                     name="full_name"
@@ -95,9 +98,7 @@ function Register() {
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="teacherEmail" className="form-label">
-                    Email
-                  </label>
+                  <label htmlFor="teacherEmail" className="form-label">Email</label>
                   <input
                     value={TeacherData.email}
                     name="email"
@@ -110,9 +111,7 @@ function Register() {
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="password" className="form-label">
-                    Password
-                  </label>
+                  <label htmlFor="password" className="form-label">Password</label>
                   <input
                     value={TeacherData.password}
                     name="password"
@@ -124,9 +123,7 @@ function Register() {
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="qualification" className="form-label">
-                    Qualification
-                  </label>
+                  <label htmlFor="qualification" className="form-label">Qualification</label>
                   <input
                     value={TeacherData.qualification}
                     name="qualification"
@@ -138,9 +135,7 @@ function Register() {
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="mobile" className="form-label">
-                    Mobile Number
-                  </label>
+                  <label htmlFor="mobile" className="form-label">Mobile Number</label>
                   <input
                     value={TeacherData.mobile_no}
                     name="mobile_no"
@@ -152,9 +147,7 @@ function Register() {
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="skills" className="form-label">
-                    Skills
-                  </label>
+                  <label htmlFor="skills" className="form-label">Skills</label>
                   <textarea
                     value={TeacherData.skills}
                     name="skills"
