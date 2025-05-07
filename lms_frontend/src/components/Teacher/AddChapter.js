@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TeacherSidebar from "./TeacherSidebar";
 import { useParams } from 'react-router-dom';
 
-const baseURL = "http://127.0.0.1:8000/api"; // corrected baseURL
+const baseURL = "http://127.0.0.1:8000/api";
 
 function AddChapter() {
   const { course_id } = useParams();
-
   const [chapters, setChapters] = useState([]);
   const [newChapter, setNewChapter] = useState({
     title: "",
@@ -16,31 +15,43 @@ function AddChapter() {
     remarks: "",
   });
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // Fetch chapters for the specific course
+  useEffect(() => {
+    const fetchChapters = async () => {
+      try {
+        const response = await axios.get(`${baseURL}/course-chapters/${course_id}/`);
+        setChapters(response.data);
+      } catch (error) {
+        console.error("Error fetching chapters:", error);
+      }
+    };
+
+    if (course_id) {
+      fetchChapters();
+    }
+  }, [course_id, successMessage]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
-    setNewChapter((prev) => ({
+    setNewChapter(prev => ({
       ...prev,
       [name]: name === "video" ? files[0] : value,
     }));
   };
 
   const handleAddChapter = async (e) => {
-
     e.preventDefault();
-
     if (!newChapter.title || !newChapter.description) return;
 
+    setLoading(true);
     const formData = new FormData();
-
-    formData.append("course", course_id); // Use the course ID from the URL
-
+    formData.append("course", course_id);
     formData.append("title", newChapter.title);
     formData.append("description", newChapter.description);
     formData.append("video", newChapter.video);
     formData.append("remarks", newChapter.remarks);
-    formData.append("course", 1); // Replace with dynamic course ID if needed
 
     try {
       const response = await axios.post(`${baseURL}/chapter/`, formData, {
@@ -48,8 +59,6 @@ function AddChapter() {
           "Content-Type": "multipart/form-data",
         },
       });
-
-      setChapters([...chapters, response.data]);
 
       setNewChapter({
         title: "",
@@ -62,13 +71,15 @@ function AddChapter() {
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (error) {
       console.error("Error adding chapter:", error);
-      alert("Failed to add chapter. See console for details.");
+      alert(`Failed to add chapter: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="container mt-4">
-      <h4>Manage your course</h4>
+      <h4>Manage Course Chapters (Course ID: {course_id})</h4>
 
       {successMessage && (
         <div className="alert alert-success" role="alert">
@@ -111,9 +122,10 @@ function AddChapter() {
                 name="video"
                 onChange={handleChange}
                 accept="video/*"
+                required
               />
               <small className="form-text text-muted">
-                Upload a video file (e.g., .mp4, .mov).
+                Upload a video file (e.g., .mp4, .mov)
               </small>
             </div>
 
@@ -129,8 +141,12 @@ function AddChapter() {
             </div>
 
             <div className="text-end">
-              <button type="submit" className="btn btn-success">
-                Add Chapter
+              <button 
+                type="submit" 
+                className="btn btn-success"
+                disabled={loading}
+              >
+                {loading ? 'Adding...' : 'Add Chapter'}
               </button>
             </div>
           </div>
@@ -138,18 +154,32 @@ function AddChapter() {
       </form>
 
       <div className="card">
-        <div className="card-header">Chapters</div>
+        <div className="card-header">Existing Chapters</div>
         <ul className="list-group list-group-flush">
           {chapters.length === 0 ? (
             <li className="list-group-item text-muted">
-              No chapters added yet.
+              No chapters added yet for this course.
             </li>
           ) : (
-            chapters.map((chapter, index) => (
-              <li key={index} className="list-group-item">
-                <strong>{chapter.title}</strong>
-                <p className="mb-1">{chapter.description}</p>
-                <small>{chapter.remarks}</small>
+            chapters.map((chapter) => (
+              <li key={chapter.id} className="list-group-item">
+                <div className="d-flex justify-content-between">
+                  <div>
+                    <strong>{chapter.title}</strong>
+                    <p className="mb-1">{chapter.description}</p>
+                    <small>{chapter.remarks}</small>
+                  </div>
+                  {chapter.video && (
+                    <a 
+                      href={chapter.video} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="btn btn-sm btn-primary"
+                    >
+                      View Video
+                    </a>
+                  )}
+                </div>
               </li>
             ))
           )}

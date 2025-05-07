@@ -20,16 +20,22 @@ class TeacherDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Teacher.objects.all()
     serializer_class = TeacherSerializer
 
-
+#correct the IndentationError here
 @csrf_exempt
 def teacher_login(request):
+    if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        teacherData = models.Teacher.objects.get(email=email, password=password)
-        if teacherData:
-            return JsonResponse({'bool':True, 'teacher_id':teacherData.id})
-        else:
-            return JsonResponse({'bool':False})   
+        
+        try:
+            teacher = models.Teacher.objects.get(email=email)
+            if teacher.password == password:
+                return JsonResponse({'bool': True, 'teacher_id': teacher.id})
+            else:
+                return JsonResponse({'bool': False, 'error': 'password'})
+        except models.Teacher.DoesNotExist:
+            return JsonResponse({'bool': False, 'error': 'email'})
+    return JsonResponse({'bool': False, 'error': 'invalid'})
 # -----------------------------
 # Category Views
 # -----------------------------
@@ -58,3 +64,12 @@ class TeacherCourseList(generics.ListAPIView):
 class ChapterList(generics.ListCreateAPIView):
     queryset = models.Chapter.objects.all()  # ✅ Corrected: use Course, not CourseCategory
     serializer_class = ChapterSerializer
+    
+    
+
+class ChapterListByCourse(generics.ListAPIView):
+    serializer_class = ChapterSerializer
+
+    def get_queryset(self):
+        course_id = self.kwargs['course_id']
+        return Chapter.objects.filter(course_id=course_id)    

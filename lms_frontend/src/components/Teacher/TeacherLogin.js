@@ -8,7 +8,7 @@ function Login() {
     email: "",
     password: "",
   });
-  const [loading, setLoading] = useState(false);  // For loading state
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
     setTeacherLoginData({
@@ -19,8 +19,7 @@ function Login() {
 
   const submitForm = (e) => {
     e.preventDefault();
-    console.log("Submitting login with", teacherLoginData);  // Log the data being sent
-    setLoading(true);  // Start loading indicator
+    setLoading(true);
   
     const teacherFormData = new FormData();
     teacherFormData.append("email", teacherLoginData.email);
@@ -29,32 +28,35 @@ function Login() {
     axios
       .post(baseUrl + "/teacher-login/", teacherFormData)
       .then((res) => {
-        //setLoading(false);
+        setLoading(false);
         if (res.data.bool === true) {
           localStorage.setItem("teacherLoginStatus", "true");
           localStorage.setItem("teacherId", res.data.teacher_id);
-
-          window.location.href = "/teacher-dashboard"; // Redirect after successful login
+          window.location.href = "/teacher-dashboard";
         } else {
-          alert("Invalid login details");
+          if (res.data.error === "email") {
+            alert("User does not exist");
+          } else {
+            alert("Password is incorrect");
+          }
+          window.location.reload(); // Refresh after showing alert
         }
       })
       .catch((error) => {
         setLoading(false);
-        console.log(error.response ? error.response.data : error.message);
-        alert(error.response ? error.response.data.message : "Error during login. Please try again.");
+        alert("Login error. Please try again.");
+        window.location.reload();
       });
   };
-  
 
-const teacherLoginStatus = localStorage.getItem("teacherLoginStatus");
+  const teacherLoginStatus = localStorage.getItem("teacherLoginStatus");
 
   useEffect(() => {
     document.title = "Teacher Login";
     if (teacherLoginStatus === "true") {
-      window.location.href = "/teacher-dashboard"; // Redirect if already logged in
+      window.location.href = "/teacher-dashboard";
     }
-  }, []);  // Empty dependency array means it runs only once, on mount
+  }, []);
 
   return (
     <div className="container mt-4">
@@ -76,6 +78,7 @@ const teacherLoginStatus = localStorage.getItem("teacherLoginStatus");
                     className="form-control"
                     id="teacherEmail"
                     required
+                    autoFocus
                   />
                 </div>
                 <div className="mb-3">
@@ -92,18 +95,19 @@ const teacherLoginStatus = localStorage.getItem("teacherLoginStatus");
                     required
                   />
                 </div>
-                {/* <div className="mb-3 form-check">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id="teacherRemember"
-                  />
-                  <label className="form-check-label" htmlFor="teacherRemember">
-                    Remember Me!
-                  </label>
-                </div> */}
-                <button type="submit" className="btn btn-primary" disabled={loading}>
-                  {loading ? "Logging In..." : "Login"}
+                <button 
+                  type="submit" 
+                  className="btn btn-primary" 
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Logging In...
+                    </>
+                  ) : (
+                    "Login"
+                  )}
                 </button>
               </form>
             </div>

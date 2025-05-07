@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import TeacherList, TeacherDetail  # Import TeacherList and TeacherDetail from views
+from .views import TeacherList, TeacherDetail, ChapterListByCourse  # Import TeacherList and TeacherDetail from views
 
 
 urlpatterns = [
@@ -21,6 +21,5 @@ urlpatterns = [
     
     
     # Chapter URLs
-    path('chapter/', views.ChapterList.as_view()), 
-
+    path('chapter/<int:course_id>', views.ChapterList.as_view()),  # ✅ Corrected: use Course, not CourseCategory
 ]

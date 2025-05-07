@@ -79,7 +79,7 @@ function Main() {
         <Route path="/view-assignments" element={<ViewAssignments />} />
         <Route path="/view-students" element={<ViewStudents />} />
         <Route path="/teacher-add-courses" element={<AddCourses/>}/>
-        <Route path="/add-chapter" element={<AddChapter/>} />
+        <Route path="/add-chapter:course_id" element={<AddChapter/>} />
       </Routes>
       <Footer />
     </div>

@@ -1,5 +1,7 @@
-from rest_framework import serializers
+from rest_framework import serializers, generics
 from . import models
+from .models import Chapter  
+
 
 # Teacher serializer
 class TeacherSerializer(serializers.ModelSerializer):
@@ -40,3 +42,4 @@ class ChapterSerializer(serializers.ModelSerializer):
             'video',
             'remarks',
         ]        
+
