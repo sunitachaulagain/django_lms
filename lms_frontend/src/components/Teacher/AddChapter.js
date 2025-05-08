@@ -42,40 +42,31 @@ function AddChapter() {
   };
 
   const handleAddChapter = async (e) => {
-    e.preventDefault();
-    if (!newChapter.title || !newChapter.description) return;
-
-    setLoading(true);
+  e.preventDefault();
+  try {
     const formData = new FormData();
     formData.append("course", course_id);
     formData.append("title", newChapter.title);
-    formData.append("description", newChapter.description);
     formData.append("video", newChapter.video);
     formData.append("remarks", newChapter.remarks);
 
-    try {
-      const response = await axios.post(`${baseURL}/chapter/`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    formData.append("description", newChapter.description);
+    // Append other fields as needed
 
-      setNewChapter({
-        title: "",
-        description: "",
-        video: null,
-        remarks: "",
-      });
+    const response = await axios.post(`${baseURL}/chapter/`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
 
-      setSuccessMessage("Chapter added successfully!");
-      setTimeout(() => setSuccessMessage(""), 3000);
-    } catch (error) {
-      console.error("Error adding chapter:", error);
-      alert(`Failed to add chapter: ${error.response?.data?.message || error.message}`);
-    } finally {
-      setLoading(false);
+    if (response.status === 201) { // 201 Created
+      window.location.href = `/all-chapters/${course_id}`;
     }
-  };
+  } catch (error) {
+    console.error("Error adding chapter:", error);
+    alert(error.response?.data?.detail || "Failed to add chapter");
+  }
+};
 
   return (
     <div className="container mt-4">

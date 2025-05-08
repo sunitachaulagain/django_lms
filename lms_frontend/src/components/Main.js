@@ -25,6 +25,8 @@ import TeacherDetail from "./TeacherDetail";
 import TeacherLogout from "./Teacher/TeacherLogout";
 import AddCourses from "./Teacher/AddCourses";
 import AddChapter from "./Teacher/AddChapter";
+import AllChapters from "./Teacher/CourseChapters"; // <-- Added
+
 
 // Other Components
 import Header from "./Header";
@@ -32,10 +34,10 @@ import Home from "./Home";
 import About from "./About";
 import Footer from "./Footer";
 import CourseDetail from "./CourseDetail";
-import AllCourses  from "./AllCourses";
 import PopularCourses from "./PopularCourses";
 import PopularTeachers from "./PopularTeachers";
 import CategoryCourses from "./CategoryCourses";
+import CourseChapters from "./Teacher/CourseChapters";
 
 
 function Main() {
@@ -47,7 +49,7 @@ function Main() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/detail/:course_id" element={<CourseDetail />} />
-        <Route path="/all-courses" element={<AllCourses/>}/>
+        <Route path="/all-courses" element={<TeacherCourses/>}/>
         <Route path="/popular-courses" element={<PopularCourses/>}/>
         <Route path="/popular-teachers" element={<PopularTeachers/>}/>
         <Route path="/category/:categorySlug" element={<CategoryCourses/>}/>
@@ -79,7 +81,8 @@ function Main() {
         <Route path="/view-assignments" element={<ViewAssignments />} />
         <Route path="/view-students" element={<ViewStudents />} />
         <Route path="/teacher-add-courses" element={<AddCourses/>}/>
-        <Route path="/add-chapter:course_id" element={<AddChapter/>} />
+        <Route path="/add-chapter/:course_id" element={<AddChapter/>}/>
+        <Route path="/all-chapters/:course_id" element={<CourseChapters/>} />
       </Routes>
       <Footer />
     </div>

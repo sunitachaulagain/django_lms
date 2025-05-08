@@ -19,7 +19,6 @@ urlpatterns = [
     #Teacher courses 
     path('teacher-courses/<int:teacher_id>', views.TeacherCourseList.as_view()), 
     
-    
-    # Chapter URLs
-    path('chapter/<int:course_id>', views.ChapterList.as_view()),  # ✅ Corrected: use Course, not CourseCategory
+    path('chapter/', views.ChapterList.as_view(), name='chapter-list'),
+    path('course-chapters/<int:course_id>/', views.ChapterListByCourse.as_view(), name='course-chapters'),
 ]

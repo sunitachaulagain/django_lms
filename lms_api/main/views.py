@@ -72,4 +72,4 @@ class ChapterListByCourse(generics.ListAPIView):
 
     def get_queryset(self):
         course_id = self.kwargs['course_id']
-        return Chapter.objects.filter(course_id=course_id)    
+        return models.Chapter.objects.filter(course_id=course_id)    
