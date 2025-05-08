@@ -1,7 +1,8 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import TeacherSidebar from "../Teacher/TeacherSidebar";
+import Swal from 'sweetalert2';
 
 const baseURL = "http://127.0.0.1:8000/api";
 
@@ -11,6 +12,8 @@ function CourseChapters() {
   const [courseTitle, setCourseTitle] = useState(`Course ${course_id}`);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [totalResult, setTotalResult] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -26,13 +29,14 @@ function CourseChapters() {
           { signal }
         );
         setChapters(chaptersResponse.data);
-        setLoading(false);
+        setTotalResult(chaptersResponse.data.length);
       } catch (error) {
         if (!axios.isCancel(error)) {
           console.error("Error fetching data:", error);
           setError("Failed to load chapters data");
-          setLoading(false);
         }
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -54,6 +58,24 @@ function CourseChapters() {
   const getVideoUrl = (video) => {
     if (!video) return null;
     return video.startsWith("http") ? video : `${baseURL}${video}`;
+  };
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "This chapter will be permanently deleted!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate(`/delete-chapter/${id}`);
+      }
+      // No need to handle cancel explicitly
+    });
   };
 
   if (loading) {
@@ -107,7 +129,7 @@ function CourseChapters() {
         </aside>
         <section className="col-md-9">
           <div className="card">
-            <h5 className="card-header">Chapters for: {courseTitle}</h5>
+            <h5 className="card-header">All Chapters ({totalResult})</h5>
             <div className="card-body">
               <div className="mb-3 text-end">
                 <Link
@@ -124,6 +146,7 @@ function CourseChapters() {
                     <tr>
                       <th>Chapter Title</th>
                       <th>Video</th>
+                      <th>Remarks</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -131,7 +154,11 @@ function CourseChapters() {
                     {chapters.length > 0 ? (
                       chapters.map((chapter) => (
                         <tr key={chapter.id}>
-                          <td>{chapter.title}</td>
+                          <td>
+                            <Link to={`/edit-chapter/${chapter.id}`}>
+                              {chapter.title}
+                            </Link>
+                          </td>
                           <td>
                             {chapter.video ? (
                               <div className="video-container">
@@ -154,22 +181,26 @@ function CourseChapters() {
                               </span>
                             )}
                           </td>
+                          <td>{chapter.remarks || "No remarks"}</td>
                           <td>
                             <Link
                               to={`/edit-chapter/${chapter.id}`}
                               className="btn btn-sm btn-primary me-2"
                             >
-                              Edit
+                              <i className="bi bi-pencil-square me-1"></i> Edit
                             </Link>
-                            <button className="btn btn-sm btn-danger">
-                              Delete
+                            <button
+                              className="btn btn-sm btn-danger ms-1"
+                              onClick={() => handleDelete(chapter.id)}
+                            >
+                              <i className="bi bi-trash me-1"></i> Delete
                             </button>
                           </td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="3" className="text-center py-3">
+                        <td colSpan="4" className="text-center py-3">
                           No chapters found for this course
                         </td>
                       </tr>
