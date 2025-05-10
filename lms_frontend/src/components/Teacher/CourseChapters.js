@@ -72,12 +72,22 @@ function CourseChapters() {
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate(`/delete-chapter/${id}`);
+        axios
+          .delete(`${baseURL}/chapter/${id}/`)
+          .then((response) => {
+            Swal.fire('Deleted!', 'Chapter has been deleted.', 'success');
+            // Filter out the deleted chapter without reloading the page
+            setChapters(prev => prev.filter(chap => chap.id !== id));
+            setTotalResult(prev => prev - 1);
+          })
+          .catch((error) => {
+            console.error('Delete error:', error);
+            Swal.fire('Error', 'Failed to delete chapter.', 'error');
+          });
       }
-      // No need to handle cancel explicitly
     });
   };
-
+  
   if (loading) {
     return (
       <div className="container mt-4">

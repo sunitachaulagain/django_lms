@@ -25,8 +25,8 @@ import TeacherDetail from "./TeacherDetail";
 import TeacherLogout from "./Teacher/TeacherLogout";
 import AddCourses from "./Teacher/AddCourses";
 import AddChapter from "./Teacher/AddChapter";
-import AllChapters from "./Teacher/CourseChapters"; // <-- Added
-
+import AllChapters from "./Teacher/CourseChapters"; 
+import EditChapter from "./Teacher/EditChapter"; // <-- Added
 
 // Other Components
 import Header from "./Header";
@@ -44,7 +44,7 @@ function Main() {
   return (
     <div className="App">
       <Header />
-      <Routes> {/* Use Routes instead of Switch for React Router v6 */}
+      <Routes> 
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -83,6 +83,7 @@ function Main() {
         <Route path="/teacher-add-courses" element={<AddCourses/>}/>
         <Route path="/add-chapter/:course_id" element={<AddChapter/>}/>
         <Route path="/all-chapters/:course_id" element={<CourseChapters/>} />
+        <Route path="/edit-chapter/:chapter_id" element={<EditChapter />} />
       </Routes>
       <Footer />
     </div>

@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions 
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
+
 from django.contrib.auth.hashers import check_password
 from .serializers import TeacherSerializer, CategorySerializer, CourseSerializer, ChapterSerializer
 from . import models
@@ -73,3 +75,11 @@ class ChapterListByCourse(generics.ListAPIView):
     def get_queryset(self):
         course_id = self.kwargs['course_id']
         return models.Chapter.objects.filter(course_id=course_id)    
+    
+    
+
+
+class ChapterDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = models.Chapter.objects.all()
+    serializer_class = ChapterSerializer
+    
