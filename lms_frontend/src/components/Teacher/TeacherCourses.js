@@ -95,6 +95,12 @@ function TeacherCourses() {
                           <td>{course.total_enrolled || 0}</td>
                           <td>
                             <Link
+                              to={`/edit-course/${course.id}`}
+                              className="btn btn-info btn-sm me-2"
+                            >   
+                              Edit 
+                            </Link>
+                            <Link
                               to={`/add-chapter/${course.id}`}
                               className="btn btn-sm btn-primary me-2"
                             >
