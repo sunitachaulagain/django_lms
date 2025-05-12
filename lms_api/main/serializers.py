@@ -28,20 +28,23 @@ class CourseSerializer(serializers.ModelSerializer):
             'description',
             'featured_img',
             'techs',
+            'course_chapters',  # This is the related name for the reverse relationship
 
         ]
+        depth = 1
         
 class ChapterSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Chapter
-        fields = [
-            'id',
-            'course',           # accepts course ID during POST
-            'title',
-            'description',
-            'video',
-            'remarks',
-        ]        
+        fields = '__all__'
+        # fields = [
+        #     'id',
+        #     'course',           # accepts course ID during POST
+        #     'title',
+        #     'description',
+        #     'video',
+        #     'remarks',
+        # ]        
 
 
 
