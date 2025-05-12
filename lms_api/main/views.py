@@ -49,10 +49,18 @@ class CategoryList(generics.ListCreateAPIView):
 # -----------------------------
 # Course Views
 class CourseList(generics.ListCreateAPIView):
-    queryset = models.Course.objects.all()  # ✅ Corrected: use Course, not CourseCategory
+    queryset = models.Course.objects.all()
     serializer_class = CourseSerializer
- 
- #----------------------------------
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        result = self.request.GET.get('result')
+        if 'result' in self.request.GET:
+            qs=models.Course.objects.all().order_by('-id')[:4]
+        return qs
+    
+    
+    
  # Teacher courses   
 class TeacherCourseList(generics.ListAPIView):
     serializer_class = CourseSerializer

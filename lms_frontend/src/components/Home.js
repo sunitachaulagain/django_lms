@@ -1,84 +1,78 @@
 import { Link } from "react-router-dom";
-import AllCourses from "./AllCourses";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+const baseURL = "http://127.0.0.1:8000/api";
 
 function Home() {
-    useEffect(()=>{
-      document.title='LMS| Home page';
-    });
-  
+  const [courseData, setCourseData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    document.title = "LMS | Home page";
+
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`${baseURL}/course/`);
+        setCourseData(res.data.slice(0, 4)); // Show only 4 latest courses
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+        setError("Error loading courses");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="container mt-4">
       {/* Latest courses */}
       <h3 className="pb-1 mb-4">
-        Latest courses
+        Latest Courses
         <Link to="/all-courses" className="float-end">
           See All
         </Link>
       </h3>
+
       <div className="row">
-        {/* Cards */}
-        <div className="card m-2" style={{ width: "18rem" }}>
-          <Link to="/detail/1">
-            <img src="logo512.png" className="card-img-top" alt="Course 1" />
-          </Link>
-          <div className="card-body">
-            <h5 className="card-title">
-              <Link to="/detail/1">Course Title 1</Link>
-            </h5>
-          </div>
-        </div>
-
-        <div className="card m-2" style={{ width: "18rem" }}>
-          <Link to="/detail/2">
-            <img src="logo512.png" className="card-img-top" alt="Course 2" />
-          </Link>
-          <div className="card-body">
-            <h5 className="card-title">
-              <Link to="/detail/2">Course Title 2</Link>
-            </h5>
-          </div>
-        </div>
-
-        <div className="card m-2" style={{ width: "18rem" }}>
-          <Link to="/detail/3">
-            <img src="logo512.png" className="card-img-top" alt="Course 3" />
-          </Link>
-          <div className="card-body">
-            <h5 className="card-title">
-              <Link to="/detail/3">Course Title 3</Link>
-            </h5>
-          </div>
-        </div>
-
-        <div className="card m-2" style={{ width: "18rem" }}>
-          <Link to="/detail/4">
-            <img src="logo512.png" className="card-img-top" alt="Course 4" />
-          </Link>
-          <div className="card-body">
-            <h5 className="card-title">
-              <Link to="/detail/4">Course Title 4</Link>
-            </h5>
-          </div>
-        </div>
+        {loading && <p>Loading courses...</p>}
+        {error && <p>{error}</p>}
+        {!loading &&
+          !error &&
+          courseData.map((course) => (
+            <div className="card m-2" style={{ width: "18rem" }} key={course.id}>
+              <Link to={`/detail/${course.id}`}>
+                <img
+                  src={course.featured_img}
+                  className="card-img-top"
+                  alt={course.title}
+                  style={{ height: "180px", objectFit: "cover" }}
+                />
+              </Link>
+              <div className="card-body">
+                <h5 className="card-title">
+                  <Link to={`/detail/${course.id}`}>{course.title}</Link>
+                </h5>
+              </div>
+            </div>
+          ))}
       </div>
 
-      {/* Popular courses */}
+      {/* Popular Courses (static for now) */}
       <h3 className="pb-1 mb-4 mt-5">
-        Popular courses
+        Popular Courses
         <Link to="/popular-courses" className="float-end">
           See All
         </Link>
       </h3>
       <div className="row">
+        {/* You can replace this section with dynamic data too later */}
         <div className="card m-2" style={{ width: "18rem" }}>
           <Link to="#">
-            <img
-              src="logo512.png"
-              className="card-img-top"
-              alt="Popular Course 1"
-            />
+            <img src="logo512.png" className="card-img-top" alt="Popular Course 1" />
           </Link>
           <div className="card-body">
             <h5 className="card-title">
@@ -86,88 +80,17 @@ function Home() {
             </h5>
           </div>
           <div className="card-footer">
-            <div className="title">
-              <span>Rating: 4.5/5</span>
-              <span>
-                <div className="float-end">Views: 7877</div>
-              </span>
-            </div>
+            <span>Rating: 4.5/5</span>
+            <span className="float-end">Views: 7877</span>
           </div>
         </div>
-
-        <div className="card m-2" style={{ width: "18rem" }}>
-          <Link to="#">
-            <img
-              src="logo512.png"
-              className="card-img-top"
-              alt="Popular Course 2"
-            />
-          </Link>
-          <div className="card-body">
-            <h5 className="card-title">
-              <Link to="#">Popular Course 2</Link>
-            </h5>
-          </div>
-          <div className="card-footer">
-            <div className="title">
-              <span>Rating: 4.5/5</span>
-              <span>
-                <div className="float-end">Views: 7877</div>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="card m-2" style={{ width: "18rem" }}>
-          <Link to="#">
-            <img
-              src="logo512.png"
-              className="card-img-top"
-              alt="Popular Course 3"
-            />
-          </Link>
-          <div className="card-body">
-            <h5 className="card-title">
-              <Link to="#">Popular Course 3</Link>
-            </h5>
-          </div>
-          <div className="card-footer">
-            <div className="title">
-              <span>Rating: 4.5/5</span>
-              <span>
-                <div className="float-end">Views: 7877</div>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="card m-2" style={{ width: "18rem" }}>
-          <Link to="#">
-            <img
-              src="logo512.png"
-              className="card-img-top"
-              alt="Popular Course 4"
-            />
-          </Link>
-          <div className="card-body">
-            <h5 className="card-title">
-              <Link to="#">Popular Course 4</Link>
-            </h5>
-          </div>
-          <div className="card-footer">
-            <div className="title">
-              <span>Rating: 4.5/5</span>
-              <span>
-                <div className="float-end">Views: 7877</div>
-              </span>
-            </div>
-          </div>
-        </div>
+        {/* Add more static or dynamic cards as needed */}
       </div>
 
-      {/* Popular Teachers */}
-      <h3 className="pb-1 mb-4 mt-5">Popular Teachers
-      <Link to="/popular-teachers" className="float-end">
+      {/* Popular Teachers (static for now) */}
+      <h3 className="pb-1 mb-4 mt-5">
+        Popular Teachers
+        <Link to="/popular-teachers" className="float-end">
           See All
         </Link>
       </h3>
@@ -182,132 +105,8 @@ function Home() {
             </h5>
           </div>
         </div>
-
-        <div className="card m-2" style={{ width: "18rem" }}>
-          <Link to="#">
-            <img src="logo512.png" className="card-img-top" alt="Teacher 2" />
-          </Link>
-          <div className="card-body">
-            <h5 className="card-title">
-            <Link to="/teacher-detail/1">Teacher Name</Link>
-            </h5>
-          </div>
-        </div>
-
-        <div className="card m-2" style={{ width: "18rem" }}>
-          <Link to="#">
-            <img src="logo512.png" className="card-img-top" alt="Teacher 3" />
-          </Link>
-          <div className="card-body">
-            <h5 className="card-title">
-            <Link to="/teacher-detail/1">Teacher Name</Link>
-            </h5>
-          </div>
-        </div>
-
-        <div className="card m-2" style={{ width: "18rem" }}>
-          <Link to="#">
-            <img src="logo512.png" className="card-img-top" alt="Teacher 4" />
-          </Link>
-          <div className="card-body">
-            <h5 className="card-title">
-            <Link to="/teacher-detail/1">Teacher Name</Link>
-            </h5>
-          </div>
-        </div>
+        {/* Add more teacher cards statically or dynamically */}
       </div>
-
-      {/* Student Testimonial */}
-      <h3 className="pb-1 mb-4 mt-5">Student Testimonial</h3>
-      <div
-        id="carouselExampleIndicators"
-        className="carousel slide bg-dark text-white py-5"
-        data-bs-ride="carousel"
-      >
-        <div className="carousel-indicators">
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="0"
-            className="active"
-            aria-current="true"
-            aria-label="Slide 1"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="1"
-            aria-label="Slide 2"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="2"
-            aria-label="Slide 3"
-          ></button>
-        </div>
-
-        <div className="carousel-inner text-center">
-          <div className="carousel-item active">
-            <blockquote className="blockquote">
-              <p className="mb-4">
-                "The best learning environment I've experienced!"
-              </p>
-              <footer className="blockquote-footer text-white">
-                Alice <cite title="Source Title">BCA Program</cite>
-              </footer>
-            </blockquote>
-          </div>
-
-          <div className="carousel-item">
-            <blockquote className="blockquote">
-              <p className="mb-4">
-                "Faculty members are supportive and inspiring."
-              </p>
-              <footer className="blockquote-footer text-white">
-                Bob <cite title="Source Title">Computer Science</cite>
-              </footer>
-            </blockquote>
-          </div>
-
-          <div className="carousel-item">
-            <blockquote className="blockquote">
-              <p className="mb-4">
-                "An unforgettable journey of knowledge and growth."
-              </p>
-              <footer className="blockquote-footer text-white">
-                Charlie <cite title="Source Title">IT Department</cite>
-              </footer>
-            </blockquote>
-          </div>
-        </div>
-
-        <button
-          className="carousel-control-prev"
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide="prev"
-        >
-          <span
-            className="carousel-control-prev-icon"
-            aria-hidden="true"
-          ></span>
-          <span className="visually-hidden">Previous</span>
-        </button>
-        <button
-          className="carousel-control-next"
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide="next"
-        >
-          <span
-            className="carousel-control-next-icon"
-            aria-hidden="true"
-          ></span>
-          <span className="visually-hidden">Next</span>
-        </button>
-      </div>
-      {/* End Student Testimonial */}
     </div>
   );
 }

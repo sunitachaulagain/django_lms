@@ -39,6 +39,7 @@ import PopularCourses from "./PopularCourses";
 import PopularTeachers from "./PopularTeachers";
 import CategoryCourses from "./CategoryCourses";
 import CourseChapters from "./Teacher/CourseChapters";
+import AllCourses from "./AllCourses";
 
 
 function Main() {
@@ -50,7 +51,7 @@ function Main() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/detail/:course_id" element={<CourseDetail />} />
-        <Route path="/all-courses" element={<TeacherCourses/>}/>
+        <Route path="/all-courses" element={<AllCourses/>}/>
         <Route path="/popular-courses" element={<PopularCourses/>}/>
         <Route path="/popular-teachers" element={<PopularTeachers/>}/>
         <Route path="/category/:categorySlug" element={<CategoryCourses/>}/>
