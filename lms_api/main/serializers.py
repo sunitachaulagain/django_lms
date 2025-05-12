@@ -28,10 +28,15 @@ class CourseSerializer(serializers.ModelSerializer):
             'description',
             'featured_img',
             'techs',
-            'course_chapters',  # This is the related name for the reverse relationship
-
+            'course_chapters',# This is the related name for the reverse relationship
+            'related_videos',   # This is a method, not a field   
         ]
         depth = 1
+        
+    def get_related_videos(self, obj):
+        return obj.related_videos()
+    
+    
         
 class ChapterSerializer(serializers.ModelSerializer):
     class Meta:

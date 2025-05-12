@@ -2,23 +2,28 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+const siteURL = "http://127.0.0.1:8000/";
+
 const baseURL = "http://127.0.0.1:8000/api";
 
 function CourseDetail() {
-  const [courseData, setCourseData] = useState([]);
+  const [courseData, setCourseData] = useState({});
   const [chapterData, setChapterData] = useState([]);
   const [teacherData, setTeacherData] = useState({});
+  const [relatedCourseData, setRelatedCourseData] = useState([]);
 
-  let { course_id } = useParams();
+  const { course_id } = useParams();
 
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
         const response = await axios.get(`${baseURL}/course/${course_id}`);
-        console.log("Course Data Response: ", response.data);
-        setCourseData(response.data);
-        setTeacherData(response.data.teacher || {});
-        setChapterData(response.data.course_chapters || []);
+        const data = response.data;
+
+        setCourseData(data);
+        setTeacherData(data.teacher || {});
+        setChapterData(data.course_chapters || []);
+        setRelatedCourseData(JSON.parse(data.related_videos));
       } catch (error) {
         console.error("Error fetching course data:", error);
       }
@@ -47,6 +52,7 @@ function CourseDetail() {
               {teacherData.full_name}
             </Link>
           </p>
+          <p className="fw-bold">Technologies: {courseData.techs}</p>
           <p className="fw-bold">Duration: 3 Hours 30 Minutes</p>
           <p className="fw-bold">Total Enrolled: 456+ Students</p>
           <p className="fw-bold">Rating: 4.5/5</p>
@@ -55,7 +61,7 @@ function CourseDetail() {
 
       {/* Course Videos */}
       <div className="card mt-4 shadow-sm">
-        <h5 className="card-header bg-primary text-white">Course Videos</h5>
+        <h5 className="card-header bg-primary text-white">In this Course:</h5>
         <ul className="list-group list-group-flush">
           {chapterData.map((chapter, index) => (
             <li
@@ -119,35 +125,31 @@ function CourseDetail() {
       {/* Related Courses */}
       <h3 className="pb-1 mb-4 mt-5">Related Courses</h3>
       <div className="row mb-4">
-        <div className="col-md-3">
-          <div className="card shadow-sm">
-            <Link to="/detail/1">
-              <img src="/logo512.png" className="card-img-top" alt="Course 1" />
-            </Link>
-            <div className="card-body">
-              <h5 className="card-title">
-                <Link to="/detail/1" className="text-decoration-none">
-                  Course Title 1
-                </Link>
-              </h5>
+        {relatedCourseData.map((rcourse, index) => (
+          <div className="col-md-3 mb-3" key={index}>
+            <div className="card shadow-sm">
+              <Link to={`/detail/${rcourse.pk}`}>
+                <img
+                  target = "_blank"
+                  style={{ height: "200px", objectFit: "cover" }}
+                  src={`${siteURL}media/${rcourse.fields.featured_img}`}
+                  className="card-img-top"
+                  alt={rcourse.fields.title}
+                />
+              </Link>
+              <div className="card-body">
+                <h5 className="card-title">
+                  <Link
+                    to={`/detail/${rcourse.pk}`}
+                    className="text-decoration-none"
+                  >
+                    {rcourse.fields.title}
+                  </Link>
+                </h5>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="col-md-3">
-          <div className="card shadow-sm">
-            <Link to="/detail/2">
-              <img src="/logo512.png" className="card-img-top" alt="Course 2" />
-            </Link>
-            <div className="card-body">
-              <h5 className="card-title">
-                <Link to="/detail/2" className="text-decoration-none">
-                  Course Title 2
-                </Link>
-              </h5>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

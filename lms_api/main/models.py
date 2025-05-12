@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from django.core import serializers
 
 # Teacher Model
 class Teacher(models.Model):
@@ -39,7 +40,12 @@ class Course(models.Model):
     class Meta:
         verbose_name_plural = "3. Courses"
         
+    def related_videos(self):
+      related_videos = Course.objects.filter(techs__icontains=self.techs)
+      return serializers.serialize('json', related_videos, fields=('id', 'title', 'featured_img'))
+            
         
+    
 # Chapter Model
 class Chapter(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='course_chapters')
