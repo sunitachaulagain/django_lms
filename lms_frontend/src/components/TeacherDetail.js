@@ -1,6 +1,28 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+
+const baseURL = "http://127.0.1:8000/api";
 
 function TeacherDetail() {
+  const [teacherData, setTeacherData] = useState({});
+  const [courseData, setCourseData] = useState([]);
+
+  const { teacher_id } = useParams();
+
+  useEffect(() => {
+    try {
+      axios.get(`${baseURL}/teacher/${teacher_id}`).then((response) => {
+        console.log(response.data);
+        setCourseData(response.data.teacher_courses);
+        setTeacherData(response.data);
+      });
+    } catch (error) {
+      console.error("Error fetching teacher data:", error);
+    }
+  }, []);
+
   return (
     <div className="container mt-3">
       <div className="row">
@@ -9,18 +31,10 @@ function TeacherDetail() {
         </div>
 
         <div className="col-8">
-          <h1>John Doe</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. At dicta
-            illum ipsum veritatis, doloribus neque culpa numquam suscipit sed
-            beatae nisi saepe, dolor vitae nostrum esse eligendi quae nam. Quae
-            quidem quaerat aliquam, nemo nobis atque provident maxime
-            repellendus rem odio illum numquam ratione, vel illo ipsum amet!
-            Tenetur, obcaecati.
-          </p>
+          <h1>{teacherData.full_name}</h1>
+          <p>{teacherData.detail}</p>
           <p className="fw-bold">
-            Skills:{" "}
-            <Link to="/category/php">PHP</Link>,{" "}
+            Skills: <Link to="/category/php">PHP</Link>,{" "}
             <Link to="/category/python">Python</Link>,{" "}
             <Link to="/category/javascript">JavaScript</Link>
           </p>
@@ -34,26 +48,17 @@ function TeacherDetail() {
       {/* Course Videos */}
       <div className="card mt-4">
         <h5 className="card-header">Course List</h5>
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item">
-            <Link to="/detail/101" className="text-decoration-none">PHP Course 1</Link>
-          </li>
-          <li className="list-group-item">
-            <Link to="/detail/102" className="text-decoration-none">PHP Course 2</Link>
-          </li>
-          <li className="list-group-item">
-            <Link to="/detail/103" className="text-decoration-none">Python Course 1</Link>
-          </li>
-          <li className="list-group-item">
-            <Link to="/detail/104" className="text-decoration-none">Python Course 2</Link>
-          </li>
-          <li className="list-group-item">
-            <Link to="/detail/105" className="text-decoration-none">JavaScript Course 1</Link>
-          </li>
-          <li className="list-group-item">
-            <Link to="/detail/106" className="text-decoration-none">JavaScript Course 2</Link>
-          </li>
-        </ul>
+        <div className="list-group list-group-flush">
+          {courseData.map((course, index) => (
+            <Link
+              key={index}
+              to={`/detail/${course.id}`}
+              className="list-group-item list-group-item-action text-decoration-none"
+            >
+              {course.title}
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

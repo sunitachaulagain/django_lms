@@ -17,7 +17,7 @@ function CourseDetail() {
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        const response = await axios.get(`${baseURL}/course/${course_id}`);
+        const response = await axios.get(`${baseURL}/course/${course_id}/`);
         const data = response.data;
 
         setCourseData(data);
@@ -47,11 +47,12 @@ function CourseDetail() {
           <h2 style={{ fontWeight: "bold" }}>{courseData.title}</h2>
           <p>{courseData.description}</p>
           <p className="fw-bold">
-            Course By:{" "}
-            <Link to={`/teacher-detail/${teacherData.id}`}>
-              {teacherData.full_name}
-            </Link>
+            Course By:
+              <Link to={`/teacher-detail/${teacherData.id}`}>
+                {teacherData.full_name}
+              </Link>
           </p>
+
           <p className="fw-bold">Technologies: {courseData.techs}</p>
           <p className="fw-bold">Duration: 3 Hours 30 Minutes</p>
           <p className="fw-bold">Total Enrolled: 456+ Students</p>
@@ -130,7 +131,7 @@ function CourseDetail() {
             <div className="card shadow-sm">
               <Link to={`/detail/${rcourse.pk}`}>
                 <img
-                  target = "_blank"
+                  target="_blank"
                   style={{ height: "200px", objectFit: "cover" }}
                   src={`${siteURL}media/${rcourse.fields.featured_img}`}
                   className="card-img-top"

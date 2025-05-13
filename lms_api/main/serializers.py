@@ -8,7 +8,8 @@ class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         
         model = models.Teacher
-        fields = ['id','full_name', 'email', 'password', 'qualification', 'mobile_no', 'skills']
+        fields = ['id','full_name','detail', 'email', 'password', 'qualification', 'mobile_no', 'skills', 'teacher_courses']
+        depth = 1
 
 # Category serializer
 class CategorySerializer(serializers.ModelSerializer):
