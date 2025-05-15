@@ -8,6 +8,7 @@ const baseURL = "http://127.0.1:8000/api";
 function TeacherDetail() {
   const [teacherData, setTeacherData] = useState({});
   const [courseData, setCourseData] = useState([]);
+  const [skillList, setSkillList] = useState([]);
 
   const { teacher_id } = useParams();
 
@@ -17,6 +18,7 @@ function TeacherDetail() {
         console.log(response.data);
         setCourseData(response.data.teacher_courses);
         setTeacherData(response.data);
+        setSkillList(response.data.skill_list);
       });
     } catch (error) {
       console.error("Error fetching teacher data:", error);
@@ -27,16 +29,27 @@ function TeacherDetail() {
     <div className="container mt-3">
       <div className="row">
         <div className="col-4">
-          <img src="/logo512.png" className="card-img-top" alt="Teacher Image" />
+          <img
+            src="/logo512.png"
+            className="card-img-top"
+            alt="Teacher Image"
+          />
         </div>
 
         <div className="col-8">
           <h1>{teacherData.full_name}</h1>
           <p>{teacherData.detail}</p>
           <p className="fw-bold">
-            Skills: <Link to="/category/php">PHP</Link>,{" "}
-            <Link to="/category/python">Python</Link>,{" "}
-            <Link to="/category/javascript">JavaScript</Link>
+            Skills:
+            {skillList.map((skill, index) => (
+              <Link
+                to={`/teacher-skill-courses/${skill.trim()}/${teacherData.id}`}
+                key={index}
+                className="badge bg-pill text-dark bg-warning"
+              >
+                {skill}
+              </Link>
+            ))}
           </p>
           <p className="fw-bold">
             Recent Courses: <Link to="/teacher-detail/1">React JS</Link>

@@ -14,6 +14,7 @@ function CategoryCourses() {
       .get(`${baseURL}/course/?category=${category_slug}`)
       .then((res) => {
         setCourseData(res.data);
+        console.log(res.data);
       })
       .catch((error) => {
         console.error("Error fetching course data:", error);

@@ -38,6 +38,7 @@ def teacher_login(request):
         except models.Teacher.DoesNotExist:
             return JsonResponse({'bool': False, 'error': 'email'})
     return JsonResponse({'bool': False, 'error': 'invalid'})
+
 # -----------------------------
 # Category Views
 # -----------------------------
@@ -61,11 +62,26 @@ class CourseList(generics.ListCreateAPIView):
     
     def get_queryset(self):
         queryset = models.Course.objects.all()
-        category = self.request.query_params.get('category')
+        result = self.request.GET.get('result')
+        category = self.request.GET.get('category')
+        skill = self.request.GET.get('skill')
+        teacher_id = self.request.GET.get('teacher')
+
+        if result:
+            queryset = queryset.order_by('-id')[:4]
+
         if category:
             queryset = queryset.filter(category__title__iexact=category)
+
+        if skill and teacher_id:
+            queryset = queryset.filter(techs__icontains=skill, teacher_id=teacher_id)
+        elif skill:
+            queryset = queryset.filter(techs__icontains=skill)
+        elif teacher_id:
+            queryset = queryset.filter(teacher_id=teacher_id)
+
         return queryset
-    
+  
 
 #course detail
 class CourseDetail(generics.RetrieveAPIView):

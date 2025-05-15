@@ -17,6 +17,10 @@ class Teacher(models.Model):
 
     def __str__(self):
         return self.full_name
+    
+    def skill_list(self):
+        skill_list = self.skills.split(',')
+        return skill_list  
 
 # CourseCategory Model
 class CourseCategory(models.Model):
