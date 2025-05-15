@@ -8,6 +8,9 @@ from django.contrib.auth.hashers import check_password
 from .serializers import TeacherSerializer, CategorySerializer, CourseSerializer, ChapterSerializer
 from . import models
 
+#student serializer
+from .serializers import StudentSerializer
+
 
 # -----------------------------
 # Teacher Views
@@ -128,4 +131,12 @@ class ChapterListByCourse(generics.ListAPIView):
 class ChapterDetailView(RetrieveUpdateDestroyAPIView):
     queryset = models.Chapter.objects.all()
     serializer_class = ChapterSerializer
+    
+    
+    
+# student views
+class StudentList(generics.ListCreateAPIView):
+    queryset = models.Student.objects.all()
+    serializer_class = StudentSerializer
+    # Add authentication if needed    
     

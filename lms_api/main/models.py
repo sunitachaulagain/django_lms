@@ -69,10 +69,8 @@ class Student(models.Model):
     full_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)  # Ensure email uniqueness
     password = models.CharField(max_length=100)  # Same here, password should be hashed
-    qualification = models.CharField(max_length=200)
-    mobile_no = models.CharField(max_length=15, validators=[RegexValidator(r'^\+?1?\d{9,15}$')])  # Adding a phone number validator
-    address = models.TextField()
-    intrested_categories = models.TextField()
+    username = models.CharField(max_length=200)
+    interested_categories = models.TextField()
 
     class Meta:
         verbose_name_plural = "4. Students"

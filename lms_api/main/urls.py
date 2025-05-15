@@ -32,5 +32,7 @@ urlpatterns = [
     #course detail
     path('teacher-course-detail/<int:pk>/', views.TeacherCourseDetail.as_view(), name='teacher-course-detail'),
 
+    #student urls
+    path('student/', views.StudentList.as_view(), name='student-list'),
     
 ]

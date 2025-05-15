@@ -66,3 +66,16 @@ class ChapterSerializer(serializers.ModelSerializer):
 
 
 
+#student serializer
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Student
+        fields = [
+            'id',
+            'full_name',
+            'email',
+            'password',
+            'username',
+            'interested_categories',  # This is a method, not a field
+        ]
+
