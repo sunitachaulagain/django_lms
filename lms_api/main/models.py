@@ -45,7 +45,9 @@ class Course(models.Model):
       related_videos = Course.objects.filter(techs__icontains=self.techs)
       return serializers.serialize('json', related_videos, fields=('id', 'title', 'featured_img'))
             
-        
+    def tech_list(self):
+        tech_list = self.techs.split(',')
+        return tech_list  
     
 # Chapter Model
 class Chapter(models.Model):

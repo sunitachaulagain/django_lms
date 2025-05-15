@@ -59,6 +59,13 @@ class CourseList(generics.ListCreateAPIView):
             qs=models.Course.objects.all().order_by('-id')[:4]
         return qs
     
+    def get_queryset(self):
+        queryset = models.Course.objects.all()
+        category = self.request.query_params.get('category')
+        if category:
+            queryset = queryset.filter(category__title__iexact=category)
+        return queryset
+    
 
 #course detail
 class CourseDetail(generics.RetrieveAPIView):

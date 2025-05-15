@@ -31,6 +31,7 @@ class CourseSerializer(serializers.ModelSerializer):
             'techs',
             'course_chapters',# This is the related name for the reverse relationship
             'related_videos',   # This is a method, not a field   
+            'tech_list',         # This is a method, not a field
         ]
         depth = 1
         
