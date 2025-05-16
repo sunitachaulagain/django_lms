@@ -9,7 +9,7 @@ from .serializers import TeacherSerializer, CategorySerializer, CourseSerializer
 from . import models
 
 #student serializer
-from .serializers import StudentSerializer
+from .serializers import StudentSerializer, StudentCourseEnrollSerializer
 
 
 # -----------------------------
@@ -164,3 +164,20 @@ def student_login(request):
         print("Invalid method:", request.method)  # Debug line
 
     return JsonResponse({'bool': False, 'error': 'invalid'})
+
+
+class StudentEnrollCourseList(generics.ListCreateAPIView):
+    queryset = models.StudentCourseEnrollment.objects.all()
+    serializer_class = StudentCourseEnrollSerializer
+   
+ 
+def fetch_enroll_status(request, student_id, course_id):
+    try:
+        student = models.Student.objects.get(id=student_id)
+        course = models.Course.objects.get(id=course_id)
+        enrolled = models.StudentCourseEnrollment.objects.filter(student=student, course=course).exists()
+        return JsonResponse({'bool': enrolled})
+    except models.Student.DoesNotExist:
+        return JsonResponse({'bool': False, 'error': 'Student not found'})
+    except models.Course.DoesNotExist:
+        return JsonResponse({'bool': False, 'error': 'Course not found'})

@@ -21,6 +21,8 @@ class Teacher(models.Model):
     def skill_list(self):
         skill_list = self.skills.split(',')
         return skill_list  
+    
+    
 
 # CourseCategory Model
 class CourseCategory(models.Model):
@@ -51,7 +53,10 @@ class Course(models.Model):
             
     def tech_list(self):
         tech_list = self.techs.split(',')
-        return tech_list  
+        return tech_list
+    
+    def __str__(self):
+        return self.title  
     
 # Chapter Model
 class Chapter(models.Model):
@@ -75,4 +80,15 @@ class Student(models.Model):
     class Meta:
         verbose_name_plural = "4. Students"
         
-  
+#student course enrollment
+class StudentCourseEnrollment(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrolled_courses')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='enrolled_students')
+    enrolled_time = models.DateTimeField(auto_now_add=True)
+   
+    class Meta:
+        verbose_name_plural = "5. Enrolled Courses"
+        
+    def __str__(self):
+        return {self.course}, {self.student}
+    

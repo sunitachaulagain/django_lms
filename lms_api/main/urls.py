@@ -36,5 +36,8 @@ urlpatterns = [
     path('student/', views.StudentList.as_view(), name='student-list'),
     path('student-login/', views.student_login, name='student-login'),
 
+    #student course enrollment
+    path('student-enroll-course/', views.StudentEnrollCourseList.as_view(), ),
     
+    path('student-enroll-status/<int:student_id>/<int:course_id>/', views.fetch_enroll_status),
 ]

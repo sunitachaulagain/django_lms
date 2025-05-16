@@ -79,3 +79,12 @@ class StudentSerializer(serializers.ModelSerializer):
             'interested_categories',  # This is a method, not a field
         ]
  
+class StudentCourseEnrollSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.StudentCourseEnrollment
+        fields = [
+            'id',
+            'student',
+            'course', 
+            'enrolled_time',
+        ]

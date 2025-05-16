@@ -50,12 +50,14 @@ function StudentLogin() {
       });
   };
 
-  useEffect(() => {
-    document.title = "Student Login";
-    const studentLoginStatus = localStorage.getItem("studentLoginStatus");
+  const studentLoginStatus = localStorage.getItem("studentLoginStatus");
     if (studentLoginStatus === "true") {
       window.location.href = "/student-dashboard";
     }
+
+  useEffect(() => {
+    document.title = "Student Login";
+    
   }, []);
 
   return (
