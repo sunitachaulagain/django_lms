@@ -128,7 +128,7 @@ function CourseDetail() {
             ))}
           </p>
           <p className="fw-bold">Duration: 3h 30m</p>
-          <p className="fw-bold">Total Enrolled: 456+ Students</p>
+          <p className="fw-bold">Total Enrolled: {courseData.total_enrolled_students}student(s) </p>
           <p className="fw-bold">Rating: 4.5/5</p>
 
           {studentLoginStatus ? (

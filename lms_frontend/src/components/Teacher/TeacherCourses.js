@@ -10,10 +10,11 @@ function TeacherCourses() {
   const [courseData, setCourseData] = useState([]);
   const teacherId = localStorage.getItem("teacherId");
 
-  // Fetch courses on load
   useEffect(() => {
     document.title = "Teacher Courses";
-    fetchCourses();
+    if (teacherId) {
+      fetchCourses();
+    }
   }, [teacherId]);
 
   const fetchCourses = async () => {
@@ -38,8 +39,6 @@ function TeacherCourses() {
         try {
           await axios.delete(`${baseURL}/course/${courseId}`);
           Swal.fire("Deleted!", "Course has been deleted.", "success");
-
-          // Remove deleted course from UI immediately
           setCourseData((prevData) =>
             prevData.filter((course) => course.id !== courseId)
           );
@@ -82,22 +81,30 @@ function TeacherCourses() {
                       courseData.map((course) => (
                         <tr key={course.id}>
                           <td>
-                            <Link to={`/all-chapters/${course.id}`} className="text-decoration-none">
+                            <Link
+                              to={`/all-chapters/${course.id}`}
+                              className="text-decoration-none"
+                            >
                               {course.title}
                             </Link>
                           </td>
                           <td>
                             <img
-                              src={course.featured_img || '/placeholder.jpg'}
+                              src={course.featured_img || "/placeholder.jpg"}
                               width={80}
                               className="rounded"
-                              alt={course.title}
+                              alt={course.title || "Course Image"}
                               onError={(e) => {
-                                e.target.src = '/placeholder.jpg';
+                                e.target.onerror = null;
+                                e.target.src = "/placeholder.jpg";
                               }}
                             />
                           </td>
-                          <td>{course.total_enrolled || 0}</td>
+                          <td>
+                            <Link to={`/enrolled-students/${course.id}`}>
+                              {course.total_enrolled_students}
+                            </Link>
+                          </td>
                           <td>
                             <Link
                               to={`/edit-course/${course.id}`}
@@ -107,13 +114,13 @@ function TeacherCourses() {
                             </Link>
                             <Link
                               to={`/add-chapter/${course.id}`}
-                              className="btn btn-sm btn-primary me-2"
+                              className="btn btn-primary btn-sm me-2"
                             >
                               Add Chapter
                             </Link>
                             <button
                               onClick={() => handleDelete(course.id)}
-                              className="btn btn-sm btn-danger"
+                              className="btn btn-danger btn-sm"
                             >
                               Delete
                             </button>

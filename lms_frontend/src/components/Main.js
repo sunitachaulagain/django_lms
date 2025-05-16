@@ -29,6 +29,7 @@ import AddChapter from "./Teacher/AddChapter";
 import EditChapter from "./Teacher/EditChapter"; // <-- Added
 import EditCourse from "./Teacher/EditCourse"; // <-- Added
 import TeacherSkillCourses from "./Teacher/TeacherSkillCourses"; // <-- Added
+import EnrolledStudents from "./Teacher/EnrolledStudents";
 
 // Other Components
 import Header from "./Header";
@@ -90,6 +91,7 @@ function Main() {
         <Route path="/edit-chapter/:chapter_id" element={<EditChapter />} />
         <Route path="/edit-course/:course_id" element={<EditCourse />} />
         <Route path="/teacher-skill-courses/:skill_name/:teacher_id" element={<TeacherSkillCourses />} />
+        <Route path="/enrolled-students/:courseId" element={<EnrolledStudents />} />
       </Routes>
       <Footer />
     </div>
