@@ -1,51 +1,127 @@
-import { Link } from "react-router-dom";
-import { useEffect } from "react";   
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-function Login(){
-  useEffect(()=>{
-    document.title='LMS| Student Login Page';
+const baseUrl = "http://127.0.0.1:8000/api";
+
+function StudentLogin() {
+  const [studentLoginData, setStudentLoginData] = useState({
+    email: "",
+    password: "",
   });
-    return(
-        <div className="container mt-4">
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (event) => {
+    setStudentLoginData({
+      ...studentLoginData,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const submitForm = (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const studentFormData = new FormData();
+    studentFormData.append("email", studentLoginData.email);
+    studentFormData.append("password", studentLoginData.password);
+
+    axios
+      .post(baseUrl + "/student-login/", studentFormData)
+      .then((res) => {
+        setLoading(false);
+        if (res.data.bool === true) {
+          localStorage.setItem("studentLoginStatus", "true");
+          localStorage.setItem("studentId", res.data.student_id);
+          window.location.href = "/student-dashboard";
+        } else {
+          if (res.data.error === "email") {
+            alert("User does not exist");
+          } else {
+            alert("Password is incorrect");
+          }
+          // Better UX: just clear fields instead of reloading whole page
+          setStudentLoginData({ email: "", password: "" });
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        alert("Login error. Please try again.");
+        console.error(error); // helpful for debugging
+      });
+  };
+
+  useEffect(() => {
+    document.title = "Student Login";
+    const studentLoginStatus = localStorage.getItem("studentLoginStatus");
+    if (studentLoginStatus === "true") {
+      window.location.href = "/student-dashboard";
+    }
+  }, []);
+
+  return (
+    <div className="container mt-4">
       <div className="row">
         <div className="col-6 offset-3">
           <div className="card">
-            <h5 className="card-header">User Login</h5>
+            <h5 className="card-header">Student Login</h5>
             <div className="card-body">
-              <form>
+              <form onSubmit={submitForm}>
                 <div className="mb-3">
-                  <label htmlFor="exampleInputEmail1" className="form-label">
-                    Username
+                  <label htmlFor="studentEmail" className="form-label">
+                    Email
                   </label>
                   <input
+                    name="email"
+                    value={studentLoginData.email}
+                    onChange={handleChange}
                     type="email"
                     className="form-control"
-                    id="exampleInputEmail1"
-                    aria-describedby="emailHelp"
+                    id="studentEmail"
+                    required
+                    autoFocus
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="exampleInputPassword1" className="form-label">
+                  <label htmlFor="studentPassword" className="form-label">
                     Password
                   </label>
                   <input
+                    name="password"
+                    value={studentLoginData.password}
+                    onChange={handleChange}
                     type="password"
                     className="form-control"
-                    id="exampleInputPassword1"
+                    id="studentPassword"
+                    required
                   />
                 </div>
                 <div className="mb-3 form-check">
                   <input
                     type="checkbox"
                     className="form-check-input"
-                    id="exampleCheck1"
+                    id="rememberMe"
                   />
-                  <label className="form-check-label" htmlFor="exampleCheck1">
-                    Remember Me!
+                  <label className="form-check-label" htmlFor="rememberMe">
+                    Remember Me
                   </label>
                 </div>
-                <button type="submit" className="btn btn-primary">
-                  Login
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
+                      Logging In...
+                    </>
+                  ) : (
+                    "Login"
+                  )}
                 </button>
               </form>
             </div>
@@ -53,7 +129,7 @@ function Login(){
         </div>
       </div>
     </div>
-    )
+  );
 }
 
-export default Login;
+export default StudentLogin;

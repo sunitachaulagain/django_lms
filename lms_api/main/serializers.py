@@ -78,4 +78,4 @@ class StudentSerializer(serializers.ModelSerializer):
             'username',
             'interested_categories',  # This is a method, not a field
         ]
-
+ 

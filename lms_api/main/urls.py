@@ -34,5 +34,7 @@ urlpatterns = [
 
     #student urls
     path('student/', views.StudentList.as_view(), name='student-list'),
+    path('student-login/', views.student_login, name='student-login'),
+
     
 ]

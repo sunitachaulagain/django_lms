@@ -68,9 +68,11 @@ class Chapter(models.Model):
 class Student(models.Model):
     full_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)  # Ensure email uniqueness
-    password = models.CharField(max_length=100)  # Same here, password should be hashed
+    password = models.CharField(max_length=10)  # Same here, password should be hashed
     username = models.CharField(max_length=200)
     interested_categories = models.TextField()
 
     class Meta:
         verbose_name_plural = "4. Students"
+        
+  

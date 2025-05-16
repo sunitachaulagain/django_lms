@@ -9,7 +9,8 @@ import FavouriteCourses from "./Student/FavouriteCourses";
 import RecommendedCourses from "./Student/RecommendedCourses";
 import ProfileSetting from "./Student/ProfileSetting";
 import ChangePassword from "./Student/ChangePassword";
-import SideBar from "./Student/SideBar"; // <-- Student Sidebar
+import SideBar from "./Student/SideBar"; 
+import StudentLogout from "./Student/StudentLogout"; // <-- Added
 
 // Teacher Components
 import TeacherLogin from "./Teacher/TeacherLogin";
@@ -25,7 +26,6 @@ import TeacherDetail from "./TeacherDetail";
 import TeacherLogout from "./Teacher/TeacherLogout";
 import AddCourses from "./Teacher/AddCourses";
 import AddChapter from "./Teacher/AddChapter";
-import AllChapters from "./Teacher/CourseChapters"; 
 import EditChapter from "./Teacher/EditChapter"; // <-- Added
 import EditCourse from "./Teacher/EditCourse"; // <-- Added
 import TeacherSkillCourses from "./Teacher/TeacherSkillCourses"; // <-- Added
@@ -59,15 +59,16 @@ function Main() {
 
 
         {/* Student Routes */}
-        <Route path="/user-login" element={<StudentLogin />} />
-        <Route path="/user-register" element={<StudentRegister />} />
-        <Route path="/user-dashboard" element={<StudentDashboard />} />
+        <Route path="/student-login" element={<StudentLogin />} />
+        <Route path="/student-register" element={<StudentRegister />} />
+        <Route path="/student-dashboard" element={<StudentDashboard />} />
         <Route path="/my-courses" element={<MyCourses />} />
         <Route path="/favourite-courses" element={<FavouriteCourses />} />
         <Route path="/recommended-courses" element={<RecommendedCourses />} />
         <Route path="/profile-setting" element={<ProfileSetting />} />
         <Route path="/change-password" element={<ChangePassword />} />
-        <Route path="/user-sidebar" element={<SideBar />} /> {/* Student Sidebar */}
+        <Route path="/student-sidebar" element={<SideBar />} /> {/* Student Sidebar */}
+        <Route path ="/student-logout" element={<StudentLogout />} />
 
         {/* Teacher Routes */}
         <Route path="/teacher-login" element={<TeacherLogin />} />

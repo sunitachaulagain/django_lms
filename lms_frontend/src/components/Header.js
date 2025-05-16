@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 
 function Header() {
-  const teacherLoginStatus = localStorage.getItem('teacherLoginStatus')
+  const teacherLoginStatus = localStorage.getItem('teacherLoginStatus');
+  const studentLoginStatus = localStorage.getItem('studentLoginStatus');
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
@@ -41,35 +43,48 @@ function Header() {
                 Teachers
               </a>
               <ul className="dropdown-menu" aria-labelledby="teacherDropdown">
-                {teacherLoginStatus !=='true'  && 
+                {teacherLoginStatus !== 'true' && (
                   <>
                     <li><Link to="/teacher-login" className="dropdown-item">Login</Link></li>
                     <li><Link to="/teacher-register" className="dropdown-item">Register</Link></li>
-                  </>  
-                }
-                <li><Link to="/teacher-dashboard" className="dropdown-item">Dashboard</Link></li>
-                <li><Link to="/teacher-logout" className="dropdown-item">Logout</Link></li>
+                    <li><hr className="dropdown-divider" /></li>
+                  </>
+                )}
+                {teacherLoginStatus === 'true' && (
+                  <>
+                    <li><Link to="/teacher-dashboard" className="dropdown-item">Dashboard</Link></li>
+                    <li><Link to="/teacher-logout" className="dropdown-item">Logout</Link></li>
+                  </>
+                )}
               </ul>
             </li>
 
-            {/* Student Dropdown */}
+            {/* Students Dropdown */}
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"
                 href="#"
-                id="userDropdown"
+                id="studentDropdown"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
                 Student
               </a>
-              <ul className="dropdown-menu" aria-labelledby="userDropdown">
-                <li><Link className="dropdown-item" to="/user-register">Register</Link></li>
-                <li><Link className="dropdown-item" to="/user-login">Login</Link></li>
-                <li><hr className="dropdown-divider" /></li>
-                <li><Link className="dropdown-item" to="/user-dashboard">Dashboard</Link></li>
-                <li><Link className="dropdown-item" to="/user-logout">Logout</Link></li>
+              <ul className="dropdown-menu" aria-labelledby="studentDropdown">
+                {studentLoginStatus !== 'true' && (
+                  <>
+                    <li><Link to="/student-register" className="dropdown-item">Register</Link></li>
+                    <li><Link to="/student-login" className="dropdown-item">Login</Link></li>
+                    <li><hr className="dropdown-divider" /></li>
+                  </>
+                )}
+                {studentLoginStatus === 'true' && (
+                  <>
+                    <li><Link to="/student-dashboard" className="dropdown-item">Dashboard</Link></li>
+                    <li><Link to="/student-logout" className="dropdown-item">Logout</Link></li>
+                  </>
+                )}
               </ul>
             </li>
 

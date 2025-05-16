@@ -25,7 +25,6 @@ class TeacherDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Teacher.objects.all()
     serializer_class = TeacherSerializer
 
-#correct the IndentationError here
 @csrf_exempt
 def teacher_login(request):
     if request.method == 'POST':
@@ -138,5 +137,30 @@ class ChapterDetailView(RetrieveUpdateDestroyAPIView):
 class StudentList(generics.ListCreateAPIView):
     queryset = models.Student.objects.all()
     serializer_class = StudentSerializer
-    # Add authentication if needed    
+    # Add authentication if needed 
     
+    
+       
+#student login
+@csrf_exempt
+def student_login(request):
+    if request.method == 'POST':
+        print("POST data:", request.POST)  # Debug line
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        if not email or not password:
+            return JsonResponse({'bool': False, 'error': 'missing_fields'})
+
+        try:
+            student = models.Student.objects.get(email=email)
+            if student.password == password:
+                return JsonResponse({'bool': True, 'student_id': student.id})
+            else:
+                return JsonResponse({'bool': False, 'error': 'password'})
+        except models.Student.DoesNotExist:
+            return JsonResponse({'bool': False, 'error': 'email'})
+    else:
+        print("Invalid method:", request.method)  # Debug line
+
+    return JsonResponse({'bool': False, 'error': 'invalid'})

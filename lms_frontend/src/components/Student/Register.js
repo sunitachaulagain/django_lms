@@ -1,10 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const baseURL = "http://127.0.0.1:8000/api/student/";
 
 function Register() {
+  const navigate = useNavigate();
+
   const [studentData, setStudentData] = useState({
     full_name: "",
     email: "",
@@ -13,7 +16,6 @@ function Register() {
     interested_categories: "",
   });
 
-  // Handle input changes
   const handleChange = (e) => {
     setStudentData({
       ...studentData,
@@ -21,7 +23,6 @@ function Register() {
     });
   };
 
-  // Handle form submission
   const SubmitForm = (e) => {
     e.preventDefault();
 
@@ -32,27 +33,39 @@ function Register() {
     studentFormData.append("password", studentData.password);
     studentFormData.append("interested_categories", studentData.interested_categories);
 
-    try {
-      axios
-        .post(baseURL, studentFormData)
-        .then((response) => {
-          setStudentData({
-            full_name: "",
-            email: "",
-            username: "",
-            password: "",
-            interested_categories: "",
-            status: "success",
-          });
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-          setStudentData({ ...studentData, status: "error" });
+    axios
+      .post(baseURL, studentFormData)
+      .then((response) => {
+        setStudentData({
+          full_name: "",
+          email: "",
+          username: "",
+          password: "",
+          interested_categories: "",
+          status: "success",
         });
-    } catch (error) {
-      console.error("Unexpected error:", error);
-      setStudentData({ ...studentData, status: "error" });
-    }
+
+        // SweetAlert success
+        Swal.fire({
+          icon: "success",
+          title: "Registration Successful",
+          text: "User has been created successfully!",
+          confirmButtonText: "Go to Login",
+        }).then(() => {
+          navigate("/student-login");
+        });
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+        setStudentData({ ...studentData, status: "error" });
+
+        // SweetAlert error
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed",
+          text: "There was a problem creating the user.",
+        });
+      });
   };
 
   useEffect(() => {
@@ -63,16 +76,6 @@ function Register() {
     <div className="container mt-4">
       <div className="row">
         <div className="col-6 offset-3">
-          {studentData.status === "success" && (
-            <div className="alert alert-success" role="alert">
-              User Created Successfully
-            </div>
-          )}
-          {studentData.status === "error" && (
-            <div className="alert alert-danger" role="alert">
-              User Creation Failed
-            </div>
-          )}
           <div className="card">
             <h5 className="card-header">User Register</h5>
             <div className="card-body">
@@ -133,6 +136,7 @@ function Register() {
                     name="password"
                     value={studentData.password}
                     onChange={handleChange}
+                    autoComplete="current-password"
                     required
                   />
                 </div>
@@ -159,6 +163,9 @@ function Register() {
                   Register
                 </button>
               </form>
+              <p className="mt-3">
+                Already have an account? <Link to="/student-login">Login here</Link>
+              </p>
             </div>
           </div>
         </div>
