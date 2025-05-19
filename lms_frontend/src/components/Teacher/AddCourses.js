@@ -66,6 +66,7 @@ function AddCourses() {
         },
       })
       .then((res) => {
+        console.log(res.data);
         console.log("Course added:", res.data);
         navigate("/teacher-dashboard");
       })

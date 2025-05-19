@@ -9,23 +9,33 @@ const baseURL = "http://127.0.0.1:8000/api";
 function CourseDetail() {
   const [courseData, setCourseData] = useState({});
   const [chapterData, setChapterData] = useState([]);
-  const [teacherData, setTeacherData] = useState({});
+  const [teacherData, setTeacherData] = useState(null);
   const [relatedCourseData, setRelatedCourseData] = useState([]);
   const [techListData, setTechListData] = useState([]);
   const [studentLoginStatus, setStudentLoginStatus] = useState(false);
   const [enrollStatus, setEnrollStatus] = useState(false);
+  const [ratingInput, setRatingInput] = useState({ rating: "", review: "" });
+  const [ratingStatus, setRatingStatus] = useState();
+  const[averageRating, setAverageRating]=useState(0);
 
   const { course_id } = useParams();
+  const studentId = localStorage.getItem("studentId");
 
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        const { data } = await axios.get(`${baseURL}/course/${course_id}/`);
+        const res = await axios.get(`${baseURL}/course/${course_id}/`);
+        const data = res.data;
         setCourseData(data);
-        setTeacherData(data.teacher || {});
+        setTeacherData(data.teacher || null);
         setChapterData(data.course_chapters || []);
+        console.log("Chapter data:", JSON.stringify(data.course_chapters, null, 2));
         setRelatedCourseData(JSON.parse(data.related_videos || "[]"));
         setTechListData(data.tech_list || []);
+        if(res.data.course_rating != '' && res.data.course_rating != null){
+          setAverageRating(res.data.course_rating )
+        }
+      
       } catch (error) {
         console.error("Error fetching course data:", error);
       }
@@ -33,45 +43,55 @@ function CourseDetail() {
       const isLoggedIn = localStorage.getItem("studentLoginStatus") === "true";
       setStudentLoginStatus(isLoggedIn);
 
-      if (isLoggedIn) {
-        const studentId = localStorage.getItem("studentId");
-        if (studentId) {
-          try {
-            const response = await axios.get(
-              `${baseURL}/student-enroll-status/${studentId}/${course_id}/`
-            );
-            if (response.data.bool === true) {
-              setEnrollStatus(true);
-            }
-          } catch (error) {
-            console.error("Error fetching enroll status:", error);
+      if (isLoggedIn && studentId) {
+        try {
+          const response = await axios.get(
+            `${baseURL}/student-enroll-status/${studentId}/${course_id}/`
+          );
+          if (response.data.bool === true) {
+            setEnrollStatus(true);
           }
+        } catch (error) {
+          console.error("Error fetching enroll status:", error);
         }
       }
     };
 
     fetchCourseData();
-  }, [course_id]);
+  }, [course_id, studentId]);
+
+  useEffect(() => {
+    if (studentId) {
+      axios
+        .get(`${baseURL}/fetch-rating-status/${studentId}/${course_id}/`)
+        .then((res) => {
+          if (res.data.bool === true) {
+            setRatingStatus("Success");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching rating status:", error);
+        });
+    }
+  }, [course_id, studentId]);
 
   const enrollCourse = async () => {
-    const studentIdRaw = localStorage.getItem("studentId");
-    if (!studentIdRaw) {
+    if (!studentId) {
       return Swal.fire({ icon: "error", title: "Please log in first." });
     }
 
     const payload = {
-      student: parseInt(studentIdRaw, 10),
+      student: parseInt(studentId, 10),
       course: parseInt(course_id, 10),
     };
 
     try {
-      const { data } = await axios.post(
-        `${baseURL}/student-enroll-course/`,
-        payload,
-        { headers: { "Content-Type": "application/json" } }
-      );
-      console.log("Enrollment successful:", data);
+      await axios.post(`${baseURL}/student-enroll-course/`, payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+
       setEnrollStatus(true);
+
       Swal.fire({
         title: "Enrolled!",
         text: "You have successfully enrolled in this course.",
@@ -95,26 +115,88 @@ function CourseDetail() {
     }
   };
 
+  const handleChange = (e) => {
+    setRatingInput({ ...ratingInput, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!studentId) {
+      return Swal.fire({ icon: "error", title: "Please log in first." });
+    }
+
+    if (!ratingInput.rating ) {
+      return Swal.fire({
+        icon: "warning",
+        title: "Incomplete Input",
+        text: "Please provide both a rating and a review.",
+      });
+    }
+
+    const payload = {
+      student: parseInt(studentId, 10),
+      course: parseInt(course_id, 10),
+      rating: parseInt(ratingInput.rating, 10),
+      review: ratingInput.review.trim(),
+    };
+
+    try {
+      await axios.post(`${baseURL}/course-rating/${course_id}/`, payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Thank you!",
+        text: "Your rating has been submitted.",
+        toast: true,
+        position: "top-end",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      
+      setRatingInput({ rating: "", review: "" });
+      setRatingStatus("Success");
+      window.location.reload();
+    } catch (error) {
+      console.error(
+        "Error submitting rating:",
+        error.response?.data || error.message
+      );
+      Swal.fire({
+        icon: "error",
+        title: "Submission Failed",
+        text: "There was an error submitting your review. Please try again.",
+      });
+    }
+  };
+
+
   return (
-    <div className="container mt-4" style={{ fontFamily: "Arial, sans-serif" }}>
-      {/* Course Info */}
-      <div className="row mb-4">
-        <div className="col-md-4">
+    <div className="container mt-3" style={{ fontFamily: "Arial, sans-serif" }}>
+      <div className="row">
+        <div className="col-4">
           <img
             src={courseData.featured_img}
             className="img-fluid rounded shadow"
-            alt="Course"
+            alt={courseData.title}
           />
         </div>
         <div className="col-md-8">
-          <h2 className="fw-bold">{courseData.title}</h2>
+          <h3 className="fw-bold">{courseData.title}</h3>
           <p>{courseData.description}</p>
           <p className="fw-bold">
             Course By:{" "}
-            <Link to={`/teacher-detail/${teacherData.id}`}>
-              {teacherData.full_name}
-            </Link>
+            {courseData.teacher_detail?.full_name ? (
+              <Link to={`/teacher-detail/${courseData.teacher_detail.id}`}>
+                {courseData.teacher_detail.full_name}
+              </Link>
+            ) : (
+              "N/A"
+            )}
           </p>
+
           <p className="fw-bold">
             Techs:{" "}
             {techListData.map((tech, i) => (
@@ -128,12 +210,106 @@ function CourseDetail() {
             ))}
           </p>
           <p className="fw-bold">Duration: 3h 30m</p>
-          <p className="fw-bold">Total Enrolled: {courseData.total_enrolled_students}student(s) </p>
-          <p className="fw-bold">Rating: 4.5/5</p>
+          <p className="fw-bold">
+            Total Enrolled: {courseData.total_enrolled_students} student(s)
+          </p>
+
+          
+         <p className="fw-bold">
+            Rating: {averageRating.rating__avg ? averageRating.rating__avg.toFixed(1) : 'No rating yet'}  
+            {studentLoginStatus && enrollStatus && (
+              <div>
+                {ratingStatus !== "Success" &&(
+                <button
+                  className="btn btn-success btn-sm ms-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#ratingModal"
+
+                >
+                  Rate This Course
+                </button>
+                )
+                }
+                {ratingStatus === "Success" &&(
+                  <small className="badge bg-warning text-dark ms-2">You already rated this code</small>
+                )}
+                
+
+                <div
+                  className="modal fade"
+                  id="ratingModal"
+                  tabIndex="-1"
+                  aria-labelledby="exampleModalLabel"
+                  onClick={(e) => e.currentTarget.blur()} // ✅ removes focus
+
+                >
+                  <div className="modal-dialog">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title" id="exampleModalLabel">
+                          Rate for {courseData.title}
+                        </h5>
+                        <button
+                          type="button"
+                          className="btn-close"
+                          data-bs-dismiss="modal"
+                        ></button>
+                      </div>
+
+                      <div className="modal-body">
+                        <form onSubmit={handleSubmit}>
+                          <div className="mb-3">
+                            <label htmlFor="ratingSelect" className="form-label">
+                              Rating
+                            </label>
+                            <select
+                              id="ratingSelect"
+                              name="rating"
+                              value={ratingInput.rating}
+                              onChange={handleChange}
+                              className="form-control"
+                            >
+                              <option value="">Select Rating</option>
+                              <option value="1">⭐</option>
+                              <option value="2">⭐⭐</option>
+                              <option value="3">⭐⭐⭐</option>
+                              <option value="4">⭐⭐⭐⭐</option>
+                              <option value="5">⭐⭐⭐⭐⭐</option>
+                            </select>
+                          </div>
+
+                          <div className="mb-3">
+                            <label
+                              htmlFor="reviewTextarea"
+                              className="form-label"
+                            >
+                              Review
+                            </label>
+                            <textarea
+                              id="reviewTextarea"
+                              name="review"
+                              rows="4"
+                              className="form-control"
+                              onChange={handleChange}
+                              value={ratingInput.review}
+                            ></textarea>
+                          </div>
+
+                          <button type="submit" className="btn btn-primary">
+                            Submit
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )} 
+          </p>
 
           {studentLoginStatus ? (
             enrollStatus ? (
-              <button className="btn btn-secondary" disabled>
+              <button className="btn btn-secondary mt-2" disabled>
                 Already Enrolled
               </button>
             ) : (
@@ -149,7 +325,6 @@ function CourseDetail() {
         </div>
       </div>
 
-      {/* Chapters */}
       <div className="card mt-4 shadow-sm">
         <h5 className="card-header bg-primary text-white">In this Course:</h5>
         <ul className="list-group list-group-flush">
@@ -176,7 +351,6 @@ function CourseDetail() {
         </ul>
       </div>
 
-      {/* Modals */}
       {chapterData.map((ch, i) => (
         <div
           key={i}
@@ -212,7 +386,6 @@ function CourseDetail() {
         </div>
       ))}
 
-      {/* Related Courses */}
       <h3 className="mt-5 mb-4">Related Courses</h3>
       <div className="row">
         {relatedCourseData.map((rc, i) => (
@@ -228,7 +401,10 @@ function CourseDetail() {
               </Link>
               <div className="card-body">
                 <h5 className="card-title">
-                  <Link to={`/detail/${rc.pk}`} className="text-decoration-none">
+                  <Link
+                    to={`/detail/${rc.pk}`}
+                    className="text-decoration-none"
+                  >
                     {rc.fields.title}
                   </Link>
                 </h5>

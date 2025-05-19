@@ -1,3 +1,4 @@
+
 from django.db import models
 from django.core.validators import RegexValidator
 from django.core import serializers
@@ -62,6 +63,10 @@ class Course(models.Model):
     def __str__(self):
         return self.title  
     
+    def course_rating(self):
+        course_rating = CourseRating.objects.filter(course=self).aggregate(models.Avg('rating'))
+        return course_rating
+    
 # Chapter Model
 class Chapter(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='course_chapters')
@@ -82,7 +87,7 @@ class Student(models.Model):
     interested_categories = models.TextField()
 
     class Meta:
-        verbose_name_plural = "4. Students"
+        verbose_name_plural = "5. Students"
         
 #student course enrollment
 class StudentCourseEnrollment(models.Model):
@@ -94,5 +99,16 @@ class StudentCourseEnrollment(models.Model):
         verbose_name_plural = "5. Enrolled Courses"
         
     def __str__(self):
-        return {self.course}, {self.student}
+        return f"{self.student} enrolled in {self.course}"
     
+# course rating and review    
+class CourseRating(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE,)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,)
+    rating = models.PositiveBigIntegerField(default=0)
+    review = models.TextField(null=True)
+    review_time = models.DateTimeField(auto_now_add=True)
+    
+    
+    def __str__(self):
+        return f"{self.course} - {self.student} - {self.rating}"

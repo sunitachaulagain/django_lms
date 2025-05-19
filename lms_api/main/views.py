@@ -1,15 +1,18 @@
+
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics, permissions 
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from django.utils.decorators import method_decorator
+
 
 from django.contrib.auth.hashers import check_password
 from .serializers import TeacherSerializer, CategorySerializer, CourseSerializer, ChapterSerializer
 from . import models
 
 #student serializer
-from .serializers import StudentSerializer, StudentCourseEnrollSerializer
+from .serializers import StudentSerializer, StudentCourseEnrollSerializer, CourseRatingSerializer
 
 
 # -----------------------------
@@ -86,7 +89,7 @@ class CourseList(generics.ListCreateAPIView):
   
 
 #course detail
-class CourseDetail(generics.RetrieveAPIView):
+class CourseDetailView(generics.RetrieveAPIView):
     queryset = models.Course.objects.all()
     serializer_class = CourseSerializer    
     
@@ -166,11 +169,13 @@ def student_login(request):
     return JsonResponse({'bool': False, 'error': 'invalid'})
 
 
+
+@method_decorator(csrf_exempt, name='dispatch')
 class StudentEnrollCourseList(generics.ListCreateAPIView):
     queryset = models.StudentCourseEnrollment.objects.all()
     serializer_class = StudentCourseEnrollSerializer
    
- 
+@csrf_exempt 
 def fetch_enroll_status(request, student_id, course_id):
     try:
         student = models.Student.objects.get(id=student_id)
@@ -179,15 +184,41 @@ def fetch_enroll_status(request, student_id, course_id):
         return JsonResponse({'bool': enrolled})
     except models.Student.DoesNotExist:
         return JsonResponse({'bool': False, 'error': 'Student not found'})
-    except models.Course.DoesNotExist:
-        return JsonResponse({'bool': False, 'error': 'Course not found'})
+    
 
+@method_decorator(csrf_exempt, name='dispatch')
 class EnrolledStudentList(generics.ListAPIView):
-    queryset = models.StudentCourseEnrollment.objects.all()
     serializer_class = StudentCourseEnrollSerializer
     
-    
+    @csrf_exempt
     def get_queryset(self):
-        course_id = self.kwargs['course_id']
-        course = models.Course.objects.get(pk=course_id)
-        return models.StudentCourseEnrollment.objects.filter(course=course) 
+        student_id = self.kwargs.get('student_id')
+        course_id = self.kwargs.get('course_id')
+        
+        queryset = models.StudentCourseEnrollment.objects.all()
+        
+        if course_id:
+            queryset = queryset.filter(course_id=course_id)
+        
+        if student_id:
+            queryset = queryset.filter(student_id=student_id)
+        
+        return queryset
+
+    
+@method_decorator(csrf_exempt, name='dispatch')    
+class CourseRatingList(generics.ListCreateAPIView):
+    serializer_class = CourseRatingSerializer
+
+    def get_queryset(self):
+        course_id = self.kwargs.get('course_id')
+        if course_id:
+            return models.CourseRating.objects.filter(course__id=course_id)
+        return models.CourseRating.objects.all()
+
+def fetch_rating_status(request, student_id, course_id):
+    try:
+        rating_exists = models.CourseRating.objects.filter(student_id=student_id, course_id=course_id).exists()
+        return JsonResponse({'bool': rating_exists})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)     
