@@ -63,9 +63,14 @@ class Course(models.Model):
     def __str__(self):
         return self.title  
     
+    # def course_rating(self):
+    #     course_rating = CourseRating.objects.filter(course=self).aggregate(models.Avg('rating'))
+    #     return course_rating
+    
     def course_rating(self):
-        course_rating = CourseRating.objects.filter(course=self).aggregate(models.Avg('rating'))
-        return course_rating
+        course_rating = CourseRating.objects.filter(course=self).aggregate(avg=models.Avg('rating'))
+        return course_rating['avg']
+
     
 # Chapter Model
 class Chapter(models.Model):

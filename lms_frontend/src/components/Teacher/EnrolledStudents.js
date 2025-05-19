@@ -49,7 +49,7 @@ function EnrolledStudents() {
                       <th>Full Name</th>
                       <th>Email</th>
                       <th>Username</th>
-                      <th>Actions</th>
+                      <th>Interested_categories</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -57,19 +57,13 @@ function EnrolledStudents() {
                       studentData.map((row) => (
                         <tr key={row.student.id}>
                           <td>
-                            <Link to={`/view-student/${row.student.id}`}>
-                              {row.student.full_name}
-                            </Link>
+                           {row.student.full_name}
+                            
                           </td>
                           <td>{row.student.email}</td>
                           <td>{row.student.username}</td>
                           <td>
-                            <Link
-                              to={`/view-student/${row.student.id}`} // Optional: more semantic route
-                              className="btn btn-info btn-sm"
-                            >
-                              View Student
-                            </Link>
+                            {row.student.interested_categories}
                           </td>
                         </tr>
                       ))

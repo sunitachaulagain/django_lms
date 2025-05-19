@@ -8,6 +8,7 @@ const baseURL = "http://127.0.0.1:8000/api";
 
 function TeacherCourses() {
   const [courseData, setCourseData] = useState([]);
+  const [avgRating, setAvgRating] = useState(0);
   const teacherId = localStorage.getItem("teacherId");
 
   useEffect(() => {
@@ -19,12 +20,27 @@ function TeacherCourses() {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get(`${baseURL}/teacher-courses/${teacherId}`);
+      const response = await axios.get(
+        `${baseURL}/teacher-courses/${teacherId}`
+      );
       setCourseData(response.data);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
   };
+
+  useEffect(() => {
+    try {
+      axios.get(baseURL + "/teacher-courses/" + teacherId).then((res) => {
+        setCourseData(res.data);
+        if (res.data.course_rating != "" && res.data.course_rating != null) {
+          setAvgRating(res.data.course_rating);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
   const handleDelete = (courseId) => {
     Swal.fire({
@@ -87,6 +103,14 @@ function TeacherCourses() {
                             >
                               {course.title}
                             </Link>
+                            <br />
+                            <small>
+                              Rating:{" "}
+                              {course.course_rating !== null &&
+                              course.course_rating !== undefined
+                                ? course.course_rating.toFixed(1)
+                                : "N/A"}
+                            </small>
                           </td>
                           <td>
                             <img
