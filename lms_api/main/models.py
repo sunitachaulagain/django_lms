@@ -8,9 +8,10 @@ class Teacher(models.Model):
     full_name = models.CharField(max_length=100)
     detail = models.TextField(null=True)
     email = models.EmailField(unique=True)  # Ensure email uniqueness
-    password = models.CharField(max_length=100)  # You should hash the password, ideally
+    password = models.CharField(max_length=100, blank=True, null=True)  # You should hash the password, ideally
     qualification = models.CharField(max_length=200)
-    mobile_no = models.CharField(max_length=15, validators=[RegexValidator(r'^\+?1?\d{9,15}$')])  # Validator for mobile
+    mobile_no = models.CharField(max_length=10, validators=[RegexValidator(r'^\+?1?\d{9,15}$')])  # Validator for mobile
+    profile_img = models.ImageField(upload_to='teacher_profile_imgs/', null=True)
     skills = models.TextField()
 
     class Meta:
@@ -22,6 +23,20 @@ class Teacher(models.Model):
     def skill_list(self):
         skill_list = self.skills.split(',')
         return skill_list  
+    
+    def total_teacher_courses(self):
+        total_courses = Course.objects.filter(teacher=self).count()
+        return total_courses
+    
+    def total_teacher_chapters(self):
+        from main.models import Chapter  # if needed
+        return Chapter.objects.filter(course__teacher=self).count()
+
+    def total_teacher_students(self):
+        from main.models import StudentCourseEnrollment
+        return StudentCourseEnrollment.objects.filter(course__teacher=self).count()
+
+
     
     
 

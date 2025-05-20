@@ -17,10 +17,31 @@ class TeacherSerializer(serializers.ModelSerializer):
             'qualification', 
             'mobile_no', 
             'skills', 
+            'profile_img',
             'teacher_courses',
             'skill_list',  # This is a method, not a field
             ]
         depth = 1
+        
+        
+# Teacher Dashboard
+class TeacherDashboardSerializer(serializers.ModelSerializer):
+    total_teacher_courses = serializers.SerializerMethodField()
+    total_teacher_students = serializers.SerializerMethodField()
+    total_teacher_chapters = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Teacher
+        fields = ['total_teacher_courses', 'total_teacher_students', 'total_teacher_chapters']
+
+    def get_total_teacher_courses(self, obj):
+        return obj.total_teacher_courses()
+
+    def get_total_teacher_students(self, obj):
+        return obj.total_teacher_students()
+
+    def get_total_teacher_chapters(self, obj):
+        return obj.total_teacher_chapters()    
 
 # Category serializer
 class CategorySerializer(serializers.ModelSerializer):

@@ -1,15 +1,18 @@
-
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics, permissions 
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from django.utils.decorators import method_decorator
+from . import models
 
 
 from django.contrib.auth.hashers import check_password
-from .serializers import TeacherSerializer, CategorySerializer, CourseSerializer, ChapterSerializer
-from . import models
+
+#Teacher serializer
+from .serializers import TeacherSerializer, CategorySerializer, CourseSerializer, ChapterSerializer, TeacherDashboardSerializer
 
 #student serializer
 from .serializers import StudentSerializer, StudentCourseEnrollSerializer, CourseRatingSerializer
@@ -27,6 +30,16 @@ class TeacherList(generics.ListCreateAPIView):
 class TeacherDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Teacher.objects.all()
     serializer_class = TeacherSerializer
+    
+@api_view(['GET'])
+def teacher_dashboard(request, pk):
+    try:
+        teacher = models.Teacher.objects.get(id=pk)
+        serializer = TeacherDashboardSerializer(teacher)
+        return Response(serializer.data)
+    except models.Teacher.DoesNotExist:
+        return Response({'error': 'Teacher not found'}, status=404)
+      
 
 @csrf_exempt
 def teacher_login(request):
