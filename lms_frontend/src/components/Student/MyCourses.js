@@ -1,8 +1,15 @@
 import {Link} from 'react-router-dom';
 import Sidebar from './SideBar';
-import { useEffect } from 'react';
+import { useState,useEffect } from 'react';
+import axios from 'axios';
+
+const baseUrl = 'http://127.0.0.1:8000/api';
 
 function MyCourses(){
+  const[courseData, setCourseData] = useState([]);
+  const student_id = localStorage.getItem('studentId')
+
+
   useEffect(()=>{
     document.title='LMS| Student Register Page';
   });

@@ -235,3 +235,27 @@ def fetch_rating_status(request, student_id, course_id):
         return JsonResponse({'bool': rating_exists})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)     
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+from . import models
+
+@csrf_exempt
+@require_http_methods(["POST"])  # Only allow POST
+def teacher_change_password(request, teacher_id):
+    password = request.POST.get('password')  # Safe access
+
+    if not password:
+        return JsonResponse({'bool': False, 'error': 'Password is required'}, status=400)
+
+    try:
+        teacher = models.Teacher.objects.get(id=teacher_id)
+    except models.Teacher.DoesNotExist:
+        return JsonResponse({'bool': False, 'error': 'Teacher not found'}, status=404)
+
+    teacher.password = password  # ⚠️ Insecure — consider hashing
+    teacher.save()
+
+    return JsonResponse({'bool': True, 'teacher_id': teacher.id})
