@@ -7,6 +7,11 @@ from rest_framework import generics, permissions
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from django.utils.decorators import method_decorator
 from . import models
+from django.views.decorators.http import require_http_methods
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods  # ← Add this
+from django.db.models import Q
 
 
 from django.contrib.auth.hashers import check_password
@@ -240,10 +245,7 @@ def fetch_rating_status(request, student_id, course_id):
         return JsonResponse({'error': str(e)}, status=500)     
 
 
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
-from . import models
+
 
 @csrf_exempt
 @require_http_methods(["POST"])  # Only allow POST
@@ -262,3 +264,45 @@ def teacher_change_password(request, teacher_id):
     teacher.save()
 
     return JsonResponse({'bool': True, 'teacher_id': teacher.id})
+
+
+
+from django.http import JsonResponse  # just for testing
+
+from django.db.models import Q
+
+@method_decorator(csrf_exempt, name='dispatch')
+class RecommendedCourses(generics.ListAPIView):
+    serializer_class = CourseSerializer
+
+    def get_queryset(self):
+        print("✅ get_queryset called")
+        student_id = self.kwargs.get('student_id')
+
+        try:
+            student = models.Student.objects.get(pk=student_id)
+
+            # Clean and split interested categories into a list of lowercase strings
+            interest_list = [
+                interest.strip().lower() 
+                for interest in student.interested_categories.split(',') 
+                if interest.strip()
+            ]
+
+            # Build a dynamic OR query to filter courses matching any tech in interests
+            query = Q()
+            for interest in interest_list:
+                query |= Q(techs__icontains=interest)
+
+            # Retrieve distinct courses matching the query
+            courses = models.Course.objects.filter(query).distinct()
+
+            # Debug print each matched course
+            for course in courses:
+                print(f"📘 Course: {course.title} | Techs: {course.techs}")
+
+            return courses
+
+        except models.Student.DoesNotExist:
+            print("❌ Student not found")
+            return models.Course.objects.none()
