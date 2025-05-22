@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import TeacherList, TeacherDetail, ChapterListByCourse, ChapterDetailView, CourseDetailView   # Import TeacherList and TeacherDetail from views
+from .views import TeacherList, TeacherDetail, ChapterListByCourse, ChapterDetailView, CourseDetailView, EnrolledStudentList  # Import TeacherList and TeacherDetail from views
 
 urlpatterns = [
     
@@ -54,5 +54,10 @@ urlpatterns = [
     path('course-rating/<int:course_id>/', views.CourseRatingList.as_view()),
     
     path('fetch-rating-status/<int:student_id>/<int:course_id>/', views.fetch_rating_status),
+
+
+    #fetch enrolled course
+    path('fetch-enrolled-courses/<int:student_id>/', EnrolledStudentList.as_view()),
+
 
 ]

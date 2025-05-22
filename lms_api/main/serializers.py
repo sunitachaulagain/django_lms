@@ -141,6 +141,13 @@ class CourseSerializer(serializers.ModelSerializer):
             'total_enrolled_students',
             'course_rating',
         ]
+        
+    def __init__ (self, *args, **kwargs):
+        super(CourseSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        self.Meta.depth = 0
+        if request and request.method == 'GET':
+            self.Meta.depth = 2        
     
     def get_category_detail(self, obj):
         return {
@@ -197,7 +204,7 @@ class StudentCourseEnrollSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         self.Meta.depth = 0
         if request and request.method == 'GET':
-             self.Meta.depth = 1   
+             self.Meta.depth = 2   
         
         
         

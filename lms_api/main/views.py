@@ -203,20 +203,23 @@ def fetch_enroll_status(request, student_id, course_id):
 class EnrolledStudentList(generics.ListAPIView):
     serializer_class = StudentCourseEnrollSerializer
     
-    @csrf_exempt
     def get_queryset(self):
         student_id = self.kwargs.get('student_id')
         course_id = self.kwargs.get('course_id')
-        
+
         queryset = models.StudentCourseEnrollment.objects.all()
-        
+
+        if student_id:
+            try:
+                student = models.Student.objects.get(pk=student_id)
+                queryset = queryset.filter(student=student)
+            except models.Student.DoesNotExist:
+                return models.StudentCourseEnrollment.objects.none()
+
         if course_id:
             queryset = queryset.filter(course_id=course_id)
-        
-        if student_id:
-            queryset = queryset.filter(student_id=student_id)
-        
-        return queryset
+
+        return queryset.distinct()
 
     
 @method_decorator(csrf_exempt, name='dispatch')    
