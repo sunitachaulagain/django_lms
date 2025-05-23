@@ -225,5 +225,5 @@ class StudentFavoriteCoursesSerializer(serializers.ModelSerializer):
         request = self.context.get('request', None)  # ✅ FIXED: use get('request', None)
         self.Meta.depth = 0
         if request and request.method == 'GET':
-            self.Meta.depth = 1  # ✅ Optional: include related data on GET
+            self.Meta.depth = 2  # ✅ Optional: include related data on GET
       

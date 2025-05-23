@@ -312,6 +312,14 @@ class StudentFavoriteCourseList(generics.ListCreateAPIView):
     queryset = models.StudentFavoriteCourses.objects.all()
     serializer_class = StudentFavoriteCoursesSerializer
     
+
+    
+    def get_queryset(self):
+        student_id = self.kwargs.get('student_id')
+        if student_id:
+            return models.StudentFavoriteCourses.objects.filter(student__id=student_id).distinct()
+        return models.StudentFavoriteCourses.objects.none()
+    
 def fetch_enroll_status(request, student_id, course_id):
     student = models.Student.objects.filter(id = student_id).first()
     course = models.Course.objects.filter(id = course_id).first()
