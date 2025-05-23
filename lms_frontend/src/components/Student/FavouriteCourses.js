@@ -1,7 +1,26 @@
-import { Link } from 'react-router-dom';
-import Sidebar from './SideBar';
+import { Link } from "react-router-dom";
+import Sidebar from "./SideBar";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-function FavoriteCourses() {
+const baseUrl = "http://127.0.0.1:8000/api";
+
+function FavouriteCourses() {
+  const [courseData, setCourseData] = useState([]);
+  const student_id = localStorage.getItem("studentId");
+
+  //fetch student here
+  useEffect(() => {
+    try {
+      axios
+        .get(baseUrl + "/fetch-favorite-courses/" + student_id)
+        .then((res) => {
+          setCourseData(res.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
   return (
     <div className="container mt-4">
       <div className="row">
@@ -10,24 +29,30 @@ function FavoriteCourses() {
         </aside>
         <section className="col-md-9">
           <div className="card">
-            <h5 className="card-header">Favourite Courses</h5>
+            '<h5 className="card-header">Favorite Courses</h5>
             <div className="card-body">
               <table className="table table-bordered">
                 <thead>
                   <tr>
                     <th>Name</th>
                     <th>Created By</th>
-                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>React Development</td>
-                    <td><Link to="/">Sunita Chaulagain</Link></td>
-                    <td>
-                      <button className="btn btn-danger btn-sm active">Remove</button>
-                    </td>
-                  </tr>
+                  {courseData.map((row, index) => (
+                    <tr key={index}>
+                      <td>
+                        <Link to={`/detail/${row.course?.id}`}>
+                          {row.course?.title}
+                        </Link>
+                      </td>
+                      <td>
+                        <Link to={`/teacher-detail/${row.course?.teacher?.id}`}>
+                          {row.course?.teacher?.full_name}
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -38,4 +63,4 @@ function FavoriteCourses() {
   );
 }
 
-export default FavoriteCourses;
+export default FavouriteCourses;

@@ -16,7 +16,8 @@ function CourseDetail() {
   const [enrollStatus, setEnrollStatus] = useState(false);
   const [ratingInput, setRatingInput] = useState({ rating: "", review: "" });
   const [ratingStatus, setRatingStatus] = useState();
-  const[averageRating, setAverageRating]=useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+  const [favoriteStatus, setFavoriteStatus] = useState();
 
   const { course_id } = useParams();
   const studentId = localStorage.getItem("studentId");
@@ -29,13 +30,16 @@ function CourseDetail() {
         setCourseData(data);
         setTeacherData(data.teacher || null);
         setChapterData(data.course_chapters || []);
-        console.log("Chapter data:", JSON.stringify(data.course_chapters, null, 2));
+        // console.log(
+        //   "Chapter data:",
+        //   JSON.stringify(data.course_chapters, null, 2)
+        // );
         setRelatedCourseData(JSON.parse(data.related_videos || "[]"));
         setTechListData(data.tech_list || []);
-        if(res.data.course_rating != '' && res.data.course_rating != null){
-          setAverageRating(res.data.course_rating )
+        if (res.data.course_rating != "" && res.data.course_rating != null) {
+          //console.log("Course Rating Response:", res.data.course_rating);
+          setAverageRating(res.data.course_rating);
         }
-      
       } catch (error) {
         console.error("Error fetching course data:", error);
       }
@@ -75,11 +79,87 @@ function CourseDetail() {
     }
   }, [course_id, studentId]);
 
+  // Marks the course as favorite
+  const marksFavorite = async () => {
+    try {
+      const res = await axios.post(baseURL + "/student-add-favorite-course/", {
+        course: course_id,
+        student: studentId,
+        status: true, // Important: set true here
+      });
+
+      if (res.status === 200 || res.status === 201) {
+        Swal.fire({
+          title: "This course has been added to your favorite list",
+          icon: "success",
+          toast: true,
+          timer: 6000,
+          position: "top-right",
+          timerProgressBar: true,
+          showConfirmButton: false,
+        });
+
+        setFavoriteStatus("success");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //fetching favorite course status
+  useEffect(() => {
+    const fetchFavoriteStatus = async () => {
+      try {
+        const res = await axios.get(
+          baseURL + "/fetch-favorite-status/" + studentId + "/" + course_id
+        );
+        if (res.data.bool === true) {
+          setFavoriteStatus("success");
+        } else {
+          setFavoriteStatus("");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchFavoriteStatus();
+  }, [studentId, course_id]);
+
+  //remove favorite courses
+  const removeFavorite = async () => {
+    const formData = new FormData();
+    formData.append("course", course_id);
+    formData.append("student", studentId);
+    formData.append("status", false);
+
+    try {
+      const res = await axios.post(
+        `${baseURL}/student-remove-favorite-course/${course_id}/${studentId}/`
+      );
+
+      if (res.status === 200) {
+        Swal.fire({
+          title: "This course has been removed from your favorite list",
+          icon: "success",
+          toast: true,
+          timer: 6000,
+          position: "top-right",
+          timerProgressBar: true,
+          showConfirmButton: false,
+        });
+
+        setFavoriteStatus("");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //Enroll in this course
   const enrollCourse = async () => {
     if (!studentId) {
       return Swal.fire({ icon: "error", title: "Please log in first." });
     }
-
     const payload = {
       student: parseInt(studentId, 10),
       course: parseInt(course_id, 10),
@@ -126,7 +206,7 @@ function CourseDetail() {
       return Swal.fire({ icon: "error", title: "Please log in first." });
     }
 
-    if (!ratingInput.rating ) {
+    if (!ratingInput.rating) {
       return Swal.fire({
         icon: "warning",
         title: "Incomplete Input",
@@ -155,7 +235,7 @@ function CourseDetail() {
         timer: 2000,
         showConfirmButton: false,
       });
-      
+
       setRatingInput({ rating: "", review: "" });
       setRatingStatus("Success");
       window.location.reload();
@@ -171,7 +251,6 @@ function CourseDetail() {
       });
     }
   };
-
 
   return (
     <div className="container mt-3" style={{ fontFamily: "Arial, sans-serif" }}>
@@ -214,26 +293,28 @@ function CourseDetail() {
             Total Enrolled: {courseData.total_enrolled_students} student(s)
           </p>
 
-          
-         <p className="fw-bold">
-            Rating: {averageRating.rating__avg ? averageRating.rating__avg.toFixed(1) : 'No rating yet'}  
+          <div className="fw-bold">
+            Rating:{" "}
+            {/* {averageRating.rating__avg
+              ? averageRating.rating__avg.toFixed(1)
+              : "No rating yet"} */}
+            {averageRating ? Number(averageRating).toFixed(1) : "No rating yet"}
             {studentLoginStatus && enrollStatus && (
               <div>
-                {ratingStatus !== "Success" &&(
-                <button
-                  className="btn btn-success btn-sm ms-2"
-                  data-bs-toggle="modal"
-                  data-bs-target="#ratingModal"
-
-                >
-                  Rate This Course
-                </button>
-                )
-                }
-                {ratingStatus === "Success" &&(
-                  <small className="badge bg-warning text-dark ms-2">You already rated this code</small>
+                {ratingStatus !== "Success" && (
+                  <button
+                    className="btn btn-success btn-sm ms-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#ratingModal"
+                  >
+                    Rate This Course
+                  </button>
                 )}
-                
+                {ratingStatus === "Success" && (
+                  <small className="badge bg-warning text-dark ms-2">
+                    You already rated this code
+                  </small>
+                )}
 
                 <div
                   className="modal fade"
@@ -241,7 +322,6 @@ function CourseDetail() {
                   tabIndex="-1"
                   aria-labelledby="exampleModalLabel"
                   onClick={(e) => e.currentTarget.blur()} // ✅ removes focus
-
                 >
                   <div className="modal-dialog">
                     <div className="modal-content">
@@ -259,7 +339,10 @@ function CourseDetail() {
                       <div className="modal-body">
                         <form onSubmit={handleSubmit}>
                           <div className="mb-3">
-                            <label htmlFor="ratingSelect" className="form-label">
+                            <label
+                              htmlFor="ratingSelect"
+                              className="form-label"
+                            >
                               Rating
                             </label>
                             <select
@@ -304,8 +387,8 @@ function CourseDetail() {
                   </div>
                 </div>
               </div>
-            )} 
-          </p>
+            )}
+          </div>
 
           {studentLoginStatus ? (
             enrollStatus ? (
@@ -322,8 +405,36 @@ function CourseDetail() {
               Login to Enroll
             </Link>
           )}
+
+          {studentLoginStatus === true && favoriteStatus !== "success" && (
+            <p>
+              <button
+                title="Add to favorite"
+                onClick={marksFavorite}
+                type="button"
+                className="btn btn-outline-danger mt-2"
+              >
+                <i className="bi bi-heart-fill"></i>
+              </button>
+            </p>
+          )}
+
+          {studentLoginStatus === true && favoriteStatus === "success" && (
+            <p>
+              <button
+                title="Remove from your favorite"
+                onClick={removeFavorite}
+                type="button"
+                className="btn btn-danger mt-2"
+              >
+                <i className="bi bi-heart"></i>
+              </button>
+            </p>
+          )}
         </div>
       </div>
+
+      {/* course videos */}
 
       <div className="card mt-4 shadow-sm">
         <h5 className="card-header bg-primary text-white">In this Course:</h5>
