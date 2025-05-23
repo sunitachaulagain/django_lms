@@ -10,4 +10,5 @@ admin.site.register(models.Student)
 admin .site.register(models.Chapter)
 admin.site.register(models.StudentCourseEnrollment)
 admin.site.register(models.CourseRating)
+admin.site.register(models.StudentFavoriteCourses)
 # Register your models here.

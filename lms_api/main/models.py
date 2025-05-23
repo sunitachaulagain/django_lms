@@ -116,7 +116,7 @@ class StudentCourseEnrollment(models.Model):
     enrolled_time = models.DateTimeField(auto_now_add=True)
    
     class Meta:
-        verbose_name_plural = "5. Enrolled Courses"
+        verbose_name_plural = "6. Enrolled Courses"
         
     def __str__(self):
         return f"{self.student} enrolled in {self.course}"
@@ -130,5 +130,22 @@ class CourseRating(models.Model):
     review_time = models.DateTimeField(auto_now_add=True)
     
     
+    class Meta:
+        verbose_name_plural = "7. Course Rating"
+        
     def __str__(self):
         return f"{self.course} - {self.student} - {self.rating}"
+    
+    
+#favorite courses
+class StudentFavoriteCourses(models.Model):
+    course = models.ForeignKey(Course,on_delete=models.CASCADE)  
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    status = models.BooleanField(default=False)
+    
+    class Meta:
+        verbose_name_plural = "8. Student Favorite Courses"
+        
+    
+    def __str__(self):
+        return f"{self.course}- {self.student}"     

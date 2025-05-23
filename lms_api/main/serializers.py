@@ -169,13 +169,6 @@ class CourseSerializer(serializers.ModelSerializer):
         return obj.enrolled_courses.count()
 
     
-    
-    
-        
-       
-
-
-
 #student serializer
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -221,4 +214,16 @@ class CourseRatingSerializer(serializers.ModelSerializer):
              self.Meta.depth = 1   
         
                
-        
+# favorite course serializer
+class StudentFavoriteCoursesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.StudentFavoriteCourses
+        fields = ['id', 'course', 'student', 'status']
+
+    def __init__(self, *args, **kwargs):
+        super(StudentFavoriteCoursesSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request', None)  # ✅ FIXED: use get('request', None)
+        self.Meta.depth = 0
+        if request and request.method == 'GET':
+            self.Meta.depth = 1  # ✅ Optional: include related data on GET
+      
