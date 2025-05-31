@@ -48,6 +48,10 @@ urlpatterns = [
     
     path('fetch-enrolled-students/<int:course_id>/', views.EnrolledStudentList.as_view()),
     
+    
+    # Student dashboard
+    path('student/dashboard/<int:pk>/', views.StudentDashboard.as_view(), name='student-dashboard'),
+    
     #course rating
     path('course-rating/', views.CourseRatingList.as_view()),
 

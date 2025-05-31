@@ -109,6 +109,38 @@ class Student(models.Model):
     class Meta:
         verbose_name_plural = "5. Students"
         
+    def __str__(self):
+        return self.full_name
+    
+    #total enrolled courses
+    def enrolled_courses(self): 
+        enrolled_courses = StudentCourseEnrollment.objects.filter(student=self).count()
+        return enrolled_courses 
+     
+    #total favorite courses
+    def favorite_courses(self):
+        favorite_courses = StudentFavoriteCourses.objects.filter(student=self).count()
+        if favorite_courses > 0:
+            return favorite_courses
+        else:
+            return 0
+    
+    #completed Assignments
+    def completed_assignments(self):
+        completed_assignments = StudentAssignment.objects.filter(student=self, student_status=True).count()
+        if completed_assignments > 0:
+            return completed_assignments
+        else:
+            return 0
+    
+    #pending Assignments  
+    def pending_assignments(self): 
+        pending_assignments = StudentAssignment.objects.filter(student=self, student_status=False).count()
+        if pending_assignments > 0:
+            return pending_assignments
+        else:
+            return 0    
+        
 #student course enrollment
 class StudentCourseEnrollment(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrolled_courses')

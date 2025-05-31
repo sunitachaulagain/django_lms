@@ -22,15 +22,15 @@ function MyCourses() {
     }
   }, []);
   return (
-    <div class="container mt-4">
-      <div class="row">
+    <div className="container mt-4">
+      <div className="row">
         <aside className="col-md-3">
           <Sidebar />
         </aside>
         <section className="col-md-9">
-          <div class="card">
+          <div className="card">
             '<h5 className="card-header">My Courses</h5>
-            <div class="card-body">
+            <div className="card-body">
               <table className="table table-bordered">
                 <thead>
                   <tr>

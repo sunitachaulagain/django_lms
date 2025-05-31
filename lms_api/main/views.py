@@ -25,7 +25,7 @@ from django.contrib.auth.hashers import check_password
 from .serializers import TeacherSerializer, CategorySerializer, CourseSerializer, ChapterSerializer, TeacherDashboardSerializer
 
 #student serializer
-from .serializers import StudentSerializer, StudentCourseEnrollSerializer, CourseRatingSerializer, StudentFavoriteCoursesSerializer, StudentAssignmentSerializer
+from .serializers import StudentSerializer, StudentCourseEnrollSerializer, CourseRatingSerializer, StudentFavoriteCoursesSerializer, StudentAssignmentSerializer, StudentDashboardSerializer
 
 
 # -----------------------------
@@ -399,3 +399,11 @@ class MyAssignmentList(generics.ListCreateAPIView):
 class UpdateAssignmentList(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.StudentAssignment.objects.all()
     serializer_class = StudentAssignmentSerializer
+    
+    
+# student dashboard
+class StudentDashboard(generics.RetrieveAPIView):
+    queryset = models.Student.objects.all()
+    serializer_class = StudentDashboardSerializer
+
+  
