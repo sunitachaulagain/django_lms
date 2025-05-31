@@ -51,6 +51,8 @@ urlpatterns = [
     
     # Student dashboard
     path('student/dashboard/<int:pk>/', views.StudentDashboard.as_view(), name='student-dashboard'),
+    path('student-detail/<int:pk>/', views.StudentDetail.as_view(), name='student-detail'),
+
     
     #course rating
     path('course-rating/', views.CourseRatingList.as_view()),

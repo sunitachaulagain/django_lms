@@ -405,5 +405,15 @@ class UpdateAssignmentList(generics.RetrieveUpdateDestroyAPIView):
 class StudentDashboard(generics.RetrieveAPIView):
     queryset = models.Student.objects.all()
     serializer_class = StudentDashboardSerializer
+    
+    
+#student detail  
+class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.Student.objects.all()
+    serializer_class = StudentSerializer
+    
+    def get_object(self):
+        student_id = self.kwargs.get('pk')
+        return get_object_or_404(models.Student, id=student_id)  
 
   

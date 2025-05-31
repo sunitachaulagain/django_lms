@@ -105,6 +105,7 @@ class Student(models.Model):
     password = models.CharField(max_length=10)  # Same here, password should be hashed
     username = models.CharField(max_length=200)
     interested_categories = models.TextField()
+    profile_img = models.ImageField(upload_to='student_profile_imgs/', null=True)
 
     class Meta:
         verbose_name_plural = "5. Students"

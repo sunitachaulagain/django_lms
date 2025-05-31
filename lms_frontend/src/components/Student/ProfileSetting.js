@@ -1,110 +1,192 @@
-import { Link } from 'react-router-dom';
-import Sidebar from './SideBar';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import SideBar from "./SideBar";
+import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
+import ChangePassword from "./ChangePassword";
+
+const baseUrl = "http://127.0.0.1:8000/api";
 
 function ProfileSetting() {
+  const [studentData, setStudentData] = useState({
+    full_name: "",
+    email: "",
+    username: "",
+    interested_categories: "",
+    profile_img: "",
+    p_img: "", // image file for upload
+  });
+
+  const student_id = localStorage.getItem("studentId");
+
+  useEffect(() => {
+    if (!student_id) return;
+
+    axios
+      .get(`${baseUrl}/student-detail/${student_id}`)
+      .then((res) => {
+        setStudentData({
+          full_name: res.data.full_name,
+          email: res.data.email,
+          username: res.data.username,
+          interested_categories: res.data.interested_categories,
+          profile_img: res.data.profile_img,
+          p_img: "",
+        });
+      })
+      .catch((error) => {
+        console.log("Error fetching student data:", error);
+      });
+  }, [student_id]);
+
+  // const handleChange = (event) => {
+  //   setStudentData({
+  //     ...studentData,
+  //     [event.target.name]: event.target.value,
+  //   });
+  // };
+
+
+  //handle Change
+
+  const handleChange = (event) => {
+    const { name, value, files } = event.target;
+    if (files && files.length > 0) {
+      setStudentData({ ...studentData, f_img: files[0] });
+    } else {
+      setStudentData({ ...studentData, [name]: value });
+    }
+  };
+  // // //
+
+  // const handleFileChange = (event) => {
+  //   setStudentData({
+  //     ...studentData,
+  //     [event.target.name]: event.target.files[0] || "",
+  //   });
+  // };
+
+  const submitForm = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("full_name", studentData.full_name);
+    formData.append("email", studentData.email);
+    formData.append("username", studentData.username);
+    formData.append("interested_categories", studentData.interested_categories);
+
+    if (studentData.p_img !== "") {
+      formData.append("profile_img", studentData.p_img);
+    }
+
+    axios
+      .patch(`${baseUrl}/student-detail/${student_id}/`, formData)
+.then(() => {
+  Swal.fire({
+    icon: 'success',
+    title: 'Profile Updated!',
+    text: 'Your profile has been updated successfully.',
+    confirmButtonText: 'OK',
+  });
+  // Optionally, update state or re-fetch data here instead of reload
+})
+      .catch((error) => {
+        console.log(
+          "Error updating profile:",
+          error.response?.data || error.message
+        );
+      });
+  };
+
+  useEffect(() => {
+    document.title = "Student Profile";
+  }, []);
+
+  const studentLoginStatus = localStorage.getItem("studentLoginStatus");
+  if (studentLoginStatus !== "true") {
+    window.location.href = "/student-login";
+  }
+
+  if (!student_id) return <p>Loading...</p>;
+
   return (
     <div className="container mt-4">
       <div className="row">
-        {/* Sidebar Section */}
         <aside className="col-md-3">
-          <Sidebar />
+          <SideBar />
         </aside>
-
-        {/* Main Content Section */}
         <section className="col-md-9">
-       
-            <div className="card">
+          <div className="card">
             <h5 className="card-header">Profile Settings</h5>
             <div className="card-body">
-              <form>
-
-                {/* Full Name */}
-                <div className="mb-3 row">
-                  <label htmlFor="fullName" className="col-sm-2 col-form-label">
-                    Full Name
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="fullName"
-                      placeholder="Enter your full name"
-                    />
-                  </div>
+              <form onSubmit={submitForm}>
+                <div className="mb-3">
+                  <label className="form-label">Full Name</label>
+                  <input
+                    type="text"
+                    name="full_name"
+                    value={studentData.full_name}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
                 </div>
 
-                {/* Email */}
-                <div className="mb-3 row">
-                  <label htmlFor="staticEmail" className="col-sm-2 col-form-label">
-                    Email
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      type="text"
-                      readOnly
-                      className="form-control-plaintext"
-                      id="staticEmail"
-                      value="email@example.com"
-                    />
-                  </div>
+                <div className="mb-3">
+                  <label className="form-label">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={studentData.email}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
                 </div>
 
-                {/**profile photo */}
-                <div className="mb-3 row">
-                  <label htmlFor="profilePhoto" className="col-sm-2 col-form-label">
-                    Profile Photo
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      type="file"
-                      className="form-control"
-                      id="profilePhoto"
-                      name="profilePhoto"
-                      accept="image/*"
-                    />
-                  </div>
+                <div className="mb-3">
+                  <label className="form-label">Username</label>
+                  <input
+                    type="text"
+                    name="username"
+                    value={studentData.username}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
                 </div>
 
-                
-
-                {/* Password */}
-                <div className="mb-3 row">
-                  <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
-                    Password
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="inputPassword"
-                      placeholder="Enter new password"
-                    />
-                  </div>
+                <div className="mb-3">
+                  <label className="form-label">Interested Categories</label>
+                  <input
+                    type="text"
+                    name="interested_categories"
+                    value={studentData.interested_categories}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
                 </div>
 
-              {/**Interest */}
-                <div className="mb-3 row">
-                  <label htmlFor="interest" className="col-sm-2 col-form-label">
-                    Interest
-                  </label>
-                  <textarea
-                    className="col-sm-10"
-                    id="interest"
-                    rows="3"
-                  ></textarea>
-                      <div id="InterestHelp" class="form-text">Java, Python,php.....etc</div>
-
+                <div className="mb-3">
+                  <label className="form-label">Profile Image</label>
+                  {studentData.profile_img && (
+                    <div className="mb-2">
+                      <img
+                        src={`http://127.0.0.1:8000${studentData.profile_img}`}
+                        alt="Profile"
+                        width="200"
+                      />
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    name="p_img"
+                    className="form-control"
+                    alt={studentData.full_name}
+                    onChange={handleChange}
+                  />
                 </div>
 
-                {/* Submit Button */}
-                <div className="mb-3 row">
-                  <div className="col-sm-10 offset-sm-2">
-                    <button type="submit" className="btn btn-primary">
-                      Update Profile
-                    </button>
-                  </div>
-                </div>
-
+                <button type="submit" className="btn btn-primary">
+                  Update
+                </button>
               </form>
             </div>
           </div>

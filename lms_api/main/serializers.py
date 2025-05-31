@@ -179,7 +179,8 @@ class StudentSerializer(serializers.ModelSerializer):
             'email',
             'password',
             'username',
-            'interested_categories',  # This is a method, not a field
+            'interested_categories',
+            'profile_img',
         ]
  
 class StudentCourseEnrollSerializer(serializers.ModelSerializer):
