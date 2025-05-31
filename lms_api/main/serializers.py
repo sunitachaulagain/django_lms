@@ -231,7 +231,7 @@ class StudentFavoriteCoursesSerializer(serializers.ModelSerializer):
 class StudentAssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.StudentAssignment
-        fields = ['id', 'teacher', 'student', 'title', 'detail', 'submission_time']
+        fields = ['id', 'teacher', 'student', 'title', 'detail', 'student_status','submission_time']
         read_only_fields = ['teacher', 'student', 'submission_time']  # 👈 Prevent override
 
     def __init__(self, *args, **kwargs):

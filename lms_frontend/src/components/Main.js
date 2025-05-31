@@ -11,6 +11,7 @@ import ProfileSetting from "./Student/ProfileSetting";
 import ChangePassword from "./Student/ChangePassword";
 import SideBar from "./Student/SideBar"; 
 import StudentLogout from "./Student/StudentLogout"; // <-- Added
+import MyAssignments from "./Student/MyAssignments"; // <-- Added
 
 // Teacher Components
 import TeacherLogin from "./Teacher/TeacherLogin";
@@ -72,6 +73,8 @@ function Main() {
         <Route path="/student-sidebar" element={<SideBar />} /> {/* Student Sidebar */}
         <Route path ="/student-logout" element={<StudentLogout />} />
 
+        <Route path="/my-assignments" element={<MyAssignments />} />
+
         {/* Teacher Routes */}
         <Route path="/teacher-login" element={<TeacherLogin />} />
         <Route path="/teacher-register" element={<TeacherRegister />} />
@@ -87,6 +90,9 @@ function Main() {
         <Route path="/add-assignment/:teacherId/:studentId" element={<AddAssignments />} />
         <Route path="/show-assignment/:teacherId/:studentId" element={<ShowAssignments />} />
 
+
+
+        {/* Teacher Course Management */}
         <Route path="/view-students" element={<ViewStudents />} />
         <Route path="/teacher-add-courses" element={<AddCourses/>}/>
         <Route path="/add-chapter/:course_id" element={<AddChapter/>}/>

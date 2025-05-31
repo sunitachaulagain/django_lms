@@ -364,7 +364,7 @@ class EnrolledStudentsByTeacherView(APIView):
         serializer = StudentSerializer(students, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-# Assignments
+# Assignments for teachers views
 class StudentAssignmentList(generics.ListCreateAPIView):
     queryset = models.StudentAssignment.objects.all()
     serializer_class = StudentAssignmentSerializer
@@ -386,3 +386,16 @@ class StudentAssignmentList(generics.ListCreateAPIView):
         student = get_object_or_404(models.Student, id=student_id)
 
         serializer.save(teacher=teacher, student=student)
+
+
+# Student Assignment Detail View
+class MyAssignmentList(generics.ListCreateAPIView):
+    serializer_class = StudentAssignmentSerializer
+
+    def get_queryset(self):
+        student_id = self.kwargs['studentId']
+        return models.StudentAssignment.objects.filter(student__id=student_id)
+
+class UpdateAssignmentList(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.StudentAssignment.objects.all()
+    serializer_class = StudentAssignmentSerializer

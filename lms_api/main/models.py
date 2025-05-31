@@ -157,6 +157,7 @@ class StudentAssignment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=200)
     detail = models.TextField(null=True, blank=True)
+    student_status = models.BooleanField(default=False, null=True)  # True if assignment is submitted
     submission_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:

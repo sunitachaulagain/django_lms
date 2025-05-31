@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link, useParams } from "react-router-dom";
 
-const baseURL = 'http://127.0.0.1:8000/api';
+const baseURL = "http://127.0.0.1:8000/api";
 
 function ShowAssignments() {
-const { teacherId, studentId } = useParams();
+  const { teacherId, studentId } = useParams();
   const [assignmentData, setAssignmentData] = useState([]);
   const [totalResult, setTotalResult] = useState(0);
 
   useEffect(() => {
-    axios.get(`${baseURL}/student-assignment/${teacherId}/${studentId}/`)
+    axios
+      .get(`${baseURL}/student-assignment/${teacherId}/${studentId}/`)
       .then((response) => {
         setAssignmentData(response.data);
         setTotalResult(response.data.length);
       })
       .catch((error) => {
-        console.error('Error fetching assignments:', error);
+        console.error("Error fetching assignments:", error);
       });
   }, [teacherId, studentId]);
 
@@ -31,8 +32,8 @@ const { teacherId, studentId } = useParams();
           <div className="card">
             <h5 className="card-header">
               All Assignments ({totalResult})
-              <Link 
-                className="btn btn-success btn-sm float-end" 
+              <Link
+                className="btn btn-success btn-sm float-end"
                 to={`/add-assignment/${teacherId}/${studentId}`}
               >
                 Add Assignment
@@ -45,18 +46,31 @@ const { teacherId, studentId } = useParams();
                     <tr>
                       <th>Title</th>
                       <th>Detail</th>
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {assignmentData.length === 0 ? (
                       <tr>
-                        <td colSpan="2" className="text-center">No assignments found.</td>
+                        <td colSpan="2" className="text-center">
+                          No assignments found.
+                        </td>
                       </tr>
                     ) : (
                       assignmentData.map((assignment) => (
                         <tr key={assignment.id}>
                           <td>{assignment.title}</td>
                           <td>{assignment.detail}</td>
+                          <td>
+                            {assignment.student_status === false && (
+                              <span className="badge bg-warning">Pending</span>
+                            )}
+                            {assignment.student_status === true && (
+                              <span className="badge bg-success">
+                                Completed
+                              </span>
+                            )}
+                          </td>
                         </tr>
                       ))
                     )}

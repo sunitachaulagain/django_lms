@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import TeacherList, TeacherDetail, ChapterListByCourse, ChapterDetailView, CourseDetailView, EnrolledStudentList, RecommendedCourses, StudentFavoriteCourseList, EnrolledStudentsByTeacherView  # Import TeacherList and TeacherDetail from views
+from .views import TeacherList, TeacherDetail, ChapterListByCourse, ChapterDetailView, CourseDetailView, EnrolledStudentList, RecommendedCourses, StudentFavoriteCourseList, EnrolledStudentsByTeacherView, UpdateAssignmentList  # Import TeacherList and TeacherDetail from views
 
 urlpatterns = [
     
@@ -77,8 +77,12 @@ urlpatterns = [
     path('fetch-favorite-courses/<int:student_id>/', StudentFavoriteCourseList.as_view()),
     
     
-    #Assignments URLs
+    #Assignments URLs teacher
     path('student-assignment/<int:teacher_id>/<int:student_id>/', views.StudentAssignmentList.as_view()), 
 
+    # Assignment URLs student
+    path('my-assignments/<int:studentId>/', views.MyAssignmentList.as_view()),
+
+    path('update-assignments/<int:pk>/', views.UpdateAssignmentList.as_view(), name='update-assignment'),
 
 ]
