@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import TeacherList, TeacherDetail, ChapterListByCourse, ChapterDetailView, CourseDetailView, EnrolledStudentList, RecommendedCourses, StudentFavoriteCourseList  # Import TeacherList and TeacherDetail from views
+from .views import TeacherList, TeacherDetail, ChapterListByCourse, ChapterDetailView, CourseDetailView, EnrolledStudentList, RecommendedCourses, StudentFavoriteCourseList, EnrolledStudentsByTeacherView  # Import TeacherList and TeacherDetail from views
 
 urlpatterns = [
     
@@ -59,6 +59,9 @@ urlpatterns = [
     #fetch enrolled course
     path('fetch-enrolled-courses/<int:student_id>/', EnrolledStudentList.as_view()),
 
+    #fetch enrolled course according to teacher
+    path('fetch-all-enrolled-students/<int:teacher_id>/', EnrolledStudentsByTeacherView.as_view(), name='fetch-all-enrolled-students'),
+
 
     #fetch recommended courses
     path('recommended-courses/<int:student_id>/', RecommendedCourses.as_view()),
@@ -72,6 +75,10 @@ urlpatterns = [
 
     #fetch favorite course
     path('fetch-favorite-courses/<int:student_id>/', StudentFavoriteCourseList.as_view()),
+    
+    
+    #Assignments URLs
+    path('student-assignment/<int:teacher_id>/<int:student_id>/', views.StudentAssignmentList.as_view()), 
 
 
 ]

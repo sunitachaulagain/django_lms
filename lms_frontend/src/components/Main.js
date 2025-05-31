@@ -20,7 +20,7 @@ import TeacherSidebar from "./Teacher/TeacherSidebar"; // <-- Teacher Sidebar
 import TeacherProfileSetting from "./Teacher/TeacherProfileSetting";
 import TeacherChangePassword from "./Teacher/TeacherChangePassword";
 import TeacherCourses from "./Teacher/TeacherCourses"; // <-- Added
-import ViewAssignments from "./Teacher/ViewAssignments"; // <-- Added
+import AddAssignments from "./Teacher/AddAssignments"; // <-- Added
 import ViewStudents from "./Teacher/ViewStudents"; // <-- Added
 import TeacherDetail from "./TeacherDetail";
 import TeacherLogout from "./Teacher/TeacherLogout";
@@ -30,6 +30,7 @@ import EditChapter from "./Teacher/EditChapter"; // <-- Added
 import EditCourse from "./Teacher/EditCourse"; // <-- Added
 import TeacherSkillCourses from "./Teacher/TeacherSkillCourses"; // <-- Added
 import EnrolledStudents from "./Teacher/EnrolledStudents";
+import ShowAssignments from "./Teacher/ShowAssignments"; // <-- Added
 
 // Other Components
 import Header from "./Header";
@@ -83,7 +84,9 @@ function Main() {
 
         {/* Teacher Course Management */}
         <Route path="/teacher-courses" element={<TeacherCourses />} />
-        <Route path="/view-assignments" element={<ViewAssignments />} />
+        <Route path="/add-assignment/:teacherId/:studentId" element={<AddAssignments />} />
+        <Route path="/show-assignment/:teacherId/:studentId" element={<ShowAssignments />} />
+
         <Route path="/view-students" element={<ViewStudents />} />
         <Route path="/teacher-add-courses" element={<AddCourses/>}/>
         <Route path="/add-chapter/:course_id" element={<AddChapter/>}/>

@@ -12,6 +12,11 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods  # ← Add this
 from django.db.models import Q
+from rest_framework import status
+from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
+
+
 
 
 from django.contrib.auth.hashers import check_password
@@ -20,7 +25,7 @@ from django.contrib.auth.hashers import check_password
 from .serializers import TeacherSerializer, CategorySerializer, CourseSerializer, ChapterSerializer, TeacherDashboardSerializer
 
 #student serializer
-from .serializers import StudentSerializer, StudentCourseEnrollSerializer, CourseRatingSerializer, StudentFavoriteCoursesSerializer
+from .serializers import StudentSerializer, StudentCourseEnrollSerializer, CourseRatingSerializer, StudentFavoriteCoursesSerializer, StudentAssignmentSerializer
 
 
 # -----------------------------
@@ -347,4 +352,37 @@ def remove_favorite_course(request,course_id, student_id):
         return JsonResponse({'bool':True})
     else:
         return JsonResponse({'bool':False})
-                    
+    
+    
+# fetch enrolled courses according to teacher
+class EnrolledStudentsByTeacherView(APIView):
+    def get(self, request, teacher_id):
+        students = models.Student.objects.filter(
+            enrolled_students__course__teacher__id=teacher_id
+        ).distinct()
+
+        serializer = StudentSerializer(students, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+# Assignments
+class StudentAssignmentList(generics.ListCreateAPIView):
+    queryset = models.StudentAssignment.objects.all()
+    serializer_class = StudentAssignmentSerializer
+
+    def get_queryset(self):
+        teacher_id = self.kwargs['teacher_id']
+        student_id = self.kwargs['student_id']
+
+        return models.StudentAssignment.objects.filter(
+            teacher_id=teacher_id,
+            student_id=student_id
+        )
+
+    def perform_create(self, serializer):
+        teacher_id = self.kwargs['teacher_id']
+        student_id = self.kwargs['student_id']
+        
+        teacher = get_object_or_404(models.Teacher, id=teacher_id)
+        student = get_object_or_404(models.Student, id=student_id)
+
+        serializer.save(teacher=teacher, student=student)
