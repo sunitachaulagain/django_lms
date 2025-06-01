@@ -416,4 +416,23 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
         student_id = self.kwargs.get('pk')
         return get_object_or_404(models.Student, id=student_id)  
 
-  
+ 
+# student change password
+@csrf_exempt
+@require_http_methods(["POST"])  # Only allow POST
+def student_change_password(request, student_id):
+    password = request.POST.get('password')  # Safe access
+
+    if not password:
+        return JsonResponse({'bool': False, 'error': 'Password is required'}, status=400)
+
+    try:
+        student = models.Student.objects.get(id=student_id)
+    except models.Student.DoesNotExist:
+        return JsonResponse({'bool': False, 'error': 'Student not found'}, status=404)
+
+    student.password = password  # ⚠️ Insecure — consider hashing
+    student.save()
+
+    return JsonResponse({'bool': True, 'student_id': student.id})
+ 

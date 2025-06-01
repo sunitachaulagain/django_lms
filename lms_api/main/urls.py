@@ -90,5 +90,9 @@ urlpatterns = [
     path('my-assignments/<int:studentId>/', views.MyAssignmentList.as_view()),
 
     path('update-assignments/<int:pk>/', views.UpdateAssignmentList.as_view(), name='update-assignment'),
+    
+    
+    #student change password
+    path('student-change-password/<int:student_id>/', views.student_change_password, name='student-change-password'),
 
 ]
